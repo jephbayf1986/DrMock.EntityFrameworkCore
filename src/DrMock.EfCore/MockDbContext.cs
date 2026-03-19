@@ -6,6 +6,7 @@ using DrMock.EfCore.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 
@@ -141,9 +142,9 @@ namespace DrMock.EfCore
                 List<Action> verifications = new List<Action>()
                 {
                     () => _mock.Verify(x => x.AddRange(It.Is(matches)), times.Value),
-                    () => _mock.Verify(x => x.AddRange(It.Is(matches.ToArrayPredicate())), times.Value),
+                    () => _mock.VerifyRangeAddedWithParams(matches, times.Value),
                     () => dbSetMock.Verify(x => x.AddRange(It.Is(matches)), times.Value),
-                    () => dbSetMock.Verify(x => x.AddRange(It.Is(matches.ToArrayPredicate())), times.Value)
+                    () => dbSetMock.VerifyRangeAddedWithParams(matches, times.Value)
                 };
 
                 verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
@@ -153,9 +154,9 @@ namespace DrMock.EfCore
                 List<Action> verifications = new List<Action>()
                 {
                     () => _mock.Verify(x => x.AddRange(It.Is(matches))),
-                    () => _mock.Verify(x => x.AddRange(It.Is(matches.ToArrayPredicate()))),
+                    () => _mock.VerifyRangeAddedWithParams(matches, Times.AtLeastOnce()),
                     () => dbSetMock.Verify(x => x.AddRange(It.Is(matches))),
-                    () => dbSetMock.Verify(x => x.AddRange(It.Is(matches.ToArrayPredicate())))
+                    () => dbSetMock.VerifyRangeAddedWithParams(matches, Times.AtLeastOnce())
                 };
 
                 verifications.EnsureAtLeastOnePasses<T>(EfMethod.Add);
@@ -170,9 +171,9 @@ namespace DrMock.EfCore
             List<Action> verifications = new List<Action>()
             {
                 () => _mock.Verify(x => x.AddRange(It.Is(matches)), Times.Once()),
-                () => _mock.Verify(x => x.AddRange(It.Is(matches.ToArrayPredicate())), Times.Once()),
+                () => _mock.VerifyRangeAddedWithParams(matches, Times.Once()),
                 () => dbSetMock.Verify(x => x.AddRange(It.Is(matches)), Times.Once()),
-                () => dbSetMock.Verify(x => x.AddRange(It.Is(matches.ToArrayPredicate())), Times.Once())
+                () => dbSetMock.VerifyRangeAddedWithParams(matches, Times.Once())
             };
 
             verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
@@ -182,14 +183,12 @@ namespace DrMock.EfCore
             where T : class, new()
         {
             _mock.Verify(x => x.AddRange(It.Is(matches)), Times.Never);
-
-            _mock.Verify(x => x.AddRange(It.Is(matches.ToArrayPredicate())), Times.Never);
+            _mock.VerifyRangeAddedWithParams(matches, Times.Never());
 
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             dbSetMock.Verify(x => x.AddRange(It.Is(matches)), Times.Never);
-
-            dbSetMock.Verify(x => x.AddRange(It.Is(matches.ToArrayPredicate())), Times.Never);
+            dbSetMock.VerifyRangeAddedWithParams(matches, Times.Never());
         }
 
         public void VerifyRangeAddedAsync<T>(Expression<Func<IEnumerable<T>, bool>> matches, Times? times = null) where T : class, new()

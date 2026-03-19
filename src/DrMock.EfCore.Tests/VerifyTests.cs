@@ -237,7 +237,7 @@ namespace DrMock.EfCore.Tests
 
         #region AddRange
 
-        //[Fact]
+        [Fact]
         public void GivenInterface_WhenRangeAddedDirect_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -270,7 +270,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public void GivenClass_WhenRangeAddedDirect_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -303,7 +303,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public async Task GivenInterface_WhenRangeAddedAsyncDirect_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -336,7 +336,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public async Task GivenClass_WhenRangeAddedAsyncDirect_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -369,7 +369,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public void GivenInterface_WhenRangeAddedOnDbSet_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -402,7 +402,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public void GivenClass_WhenRangeAddedOnDbSet_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -435,7 +435,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public async Task GivenInterface_WhenRangeAddedAsyncOnDbSet_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -468,7 +468,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public async Task GivenClass_WhenRangeAddedAsyncOnDbSet_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -501,7 +501,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public void GivenInterface_WhenRangeAddedDirect_WithParams_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -532,7 +532,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public void GivenClass_WhenRangeAddedDirect_WithParams_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -563,7 +563,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public async Task GivenInterface_WhenRangeAddedAsyncDirect_WithParams_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -594,7 +594,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public async Task GivenClass_WhenRangeAddedAsyncDirect_WithParams_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -625,7 +625,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public void GivenInterface_WhenRangeAddedOnDbSet_WithParams_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -658,7 +658,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public void GivenClass_WhenRangeAddedOnDbSet_WithParams_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -689,7 +689,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public async Task GivenInterface_WhenRangeAddedAsyncOnDbSet_WithParams_ShouldVerifyAddedCorrectly()
         {
             // Arrange
@@ -720,7 +720,7 @@ namespace DrMock.EfCore.Tests
                                             && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2));
         }
 
-        //[Fact]
+        [Fact]
         public async Task GivenClass_WhenRangeAddedAsyncOnDbSet_WithParams_ShouldVerifyAddedCorrectly()
         {
             // Arrange
