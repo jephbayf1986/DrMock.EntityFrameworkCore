@@ -6,9 +6,7 @@ using DrMock.EfCore.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace DrMock.EfCore
@@ -20,7 +18,7 @@ namespace DrMock.EfCore
 
         public MockDbContext(MockDbContextOptions options = null)
         {
-            _mock = new Mock<TContext>(MockBehavior.Loose) { CallBase = false};
+            _mock = new Mock<TContext>();
 
             _options = options ?? new MockDbContextOptions();
         }
