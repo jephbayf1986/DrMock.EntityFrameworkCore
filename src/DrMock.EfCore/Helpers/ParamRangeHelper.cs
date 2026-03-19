@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
-using System.Xml.Linq;
 
 namespace DrMock.EfCore.Helpers
 {
@@ -24,7 +23,7 @@ namespace DrMock.EfCore.Helpers
              where T : class, new()
         {
             mockDbSet.Verify(x => x.AddRange(It.IsAny<T[]>()));
-            mockDbSet.CheckInvocationsForMatches(matches, EfMethod.AddRange, times);
+            mockDbSet.CheckDbSetInvocationsForMatches(matches, EfMethod.AddRange, times);
         }
 
         public static void VerifyRangeAddedAsyncWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
@@ -39,7 +38,7 @@ namespace DrMock.EfCore.Helpers
              where T : class, new()
         {
             mockDbSet.Verify(x => x.AddRangeAsync(It.IsAny<T[]>(), It.IsAny<CancellationToken>()));
-            mockDbSet.CheckInvocationsForMatches(matches, EfMethod.AddRangeAsync, times);
+            mockDbSet.CheckDbSetInvocationsForMatches(matches, EfMethod.AddRangeAsync, times);
         }
 
         public static void VerifyRangeUpdatedWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
@@ -54,7 +53,7 @@ namespace DrMock.EfCore.Helpers
              where T : class, new()
         {
             mockDbSet.Verify(x => x.UpdateRange(It.IsAny<T[]>()));
-            mockDbSet.CheckInvocationsForMatches(matches, EfMethod.UpdateRange, times);
+            mockDbSet.CheckDbSetInvocationsForMatches(matches, EfMethod.UpdateRange, times);
         }
 
         public static void VerifyRangeRemovedWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
@@ -69,7 +68,7 @@ namespace DrMock.EfCore.Helpers
              where T : class, new()
         {
             mockDbSet.Verify(x => x.RemoveRange(It.IsAny<T[]>()));
-            mockDbSet.CheckInvocationsForMatches(matches, EfMethod.RemoveRange, times);
+            mockDbSet.CheckDbSetInvocationsForMatches(matches, EfMethod.RemoveRange, times);
         }
 
         public static void CheckInvocationsForMatches<T>(this Mock mock, Expression<Func<IEnumerable<T>, bool>> matches, EfMethod efMethod, Times times)
@@ -88,6 +87,29 @@ namespace DrMock.EfCore.Helpers
 
             var compiled = matches.Compile();
             var result = compiled(capturedCasted);
+
+            // TODO Times Check
+
+            if (!result)
+            {
+                throw new Exception("AddRange argument did not satisfy the predicate.");
+            }
+        }
+
+        public static void CheckDbSetInvocationsForMatches<T>(this Mock mock, Expression<Func<IEnumerable<T>, bool>> matches, EfMethod efMethod, Times times)
+        {
+            T[] captured = null;
+
+            mock.Invocations
+                .Where(inv => inv.Method.Name == efMethod.ToString())
+                .ToList()
+                .ForEach(inv => captured = (T[])inv.Arguments[0]);
+
+            if (captured == null)
+                throw new Exception("AddRange was not called.");
+
+            var compiled = matches.Compile();
+            var result = compiled(captured);
 
             // TODO Times Check
 
