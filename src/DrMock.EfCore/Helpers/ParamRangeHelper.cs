@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace DrMock.EfCore.Helpers
 {
@@ -15,7 +16,7 @@ namespace DrMock.EfCore.Helpers
             where TContext : class, IDbContext
             where T : class, new()
         {
-            mockDbContext.Verify(x => x.AddRange(It.IsAny<T[]>()));
+            mockDbContext.Verify(x => x.AddRange(It.IsAny<object[]>()));
             mockDbContext.CheckInvocationsForMatches(matches, EfMethod.AddRange, times);
         }
 
@@ -30,7 +31,7 @@ namespace DrMock.EfCore.Helpers
             where TContext : class, IDbContext
             where T : class, new()
         {
-            mockDbContext.Verify(x => x.AddRangeAsync(It.IsAny<T[]>(), It.IsAny<CancellationToken>()));
+            mockDbContext.Verify(x => x.AddRangeAsync(It.IsAny<object[]>()));
             mockDbContext.CheckInvocationsForMatches(matches, EfMethod.AddRangeAsync, times);
         }
         
@@ -73,18 +74,20 @@ namespace DrMock.EfCore.Helpers
 
         public static void CheckInvocationsForMatches<T>(this Mock mock, Expression<Func<IEnumerable<T>, bool>> matches, EfMethod efMethod, Times times)
         {
-            T[] captured = null;
+            object[] captured = null;
 
             mock.Invocations
                 .Where(inv => inv.Method.Name == efMethod.ToString())
                 .ToList()
-                .ForEach(inv => captured = (T[])inv.Arguments[0]);
+                .ForEach(inv => captured = (object[])inv.Arguments[0]);
 
             if (captured == null)
                 throw new Exception("AddRange was not called.");
 
+            var capturedCasted = captured.Select(x => (T)x);
+
             var compiled = matches.Compile();
-            var result = compiled(captured);
+            var result = compiled(capturedCasted);
 
             // TODO Times Check
 

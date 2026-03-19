@@ -24,7 +24,7 @@ namespace DrMock.EfCore.Helpers
             }
 
             if (passes == 0)
-                throw DrMockException.CallExpectedNotMade<T>(EfMethod.Add);
+                throw DrMockException.CallExpectedNotMade<T>(efMethod);
         }
 
         public static void EnsureOnlyOnePasses<T>(this IEnumerable<Action> actions, EfMethod efMethod)
@@ -43,10 +43,10 @@ namespace DrMock.EfCore.Helpers
             }
 
             if (passes == 0)
-                throw DrMockException.CallExpectedNotMade<T>(EfMethod.Add);
+                throw DrMockException.CallExpectedNotMade<T>(efMethod);
 
             if (passes > 1)
-                throw DrMockException.CallMadeOnBothContextAndSet<T>(EfMethod.Add);
+                throw DrMockException.CallMadeOnBothContextAndSet<T>(efMethod);
         }
     }
 }
