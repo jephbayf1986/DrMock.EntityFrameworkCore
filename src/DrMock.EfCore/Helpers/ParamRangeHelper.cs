@@ -25,8 +25,23 @@ namespace DrMock.EfCore.Helpers
             mockDbSet.CheckInvocationsForMatches(matches, times);
         }
 
+        public static void VerifyRangeAddedAsyncWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+            where TContext : class, IDbContext
+            where T : class, new()
+        {
+            mockDbContext.Verify(x => x.AddRangeAsync(It.IsAny<T[]>()), Times.AtLeastOnce);
+            mockDbContext.CheckInvocationsForMatches(matches, times);
+        }
+        
+        public static void VerifyRangeAddedAsyncWithParams<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+             where T : class, new()
+        {
+            mockDbSet.Verify(x => x.AddRangeAsync(It.IsAny<T[]>()), Times.AtLeastOnce);
+            mockDbSet.CheckInvocationsForMatches(matches, times);
+        }
+
         public static void VerifyRangeUpdatedWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
-            where TContext : class, IDbContext, new()
+            where TContext : class, IDbContext
             where T : class, new()
         {
             mockDbContext.Verify(x => x.UpdateRange(It.IsAny<T[]>()), Times.AtLeastOnce);
@@ -41,7 +56,7 @@ namespace DrMock.EfCore.Helpers
         }
 
         public static void VerifyRangeRemovedWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
-            where TContext : class, IDbContext, new()
+            where TContext : class, IDbContext
             where T : class, new()
         {
             mockDbContext.Verify(x => x.RemoveRange(It.IsAny<T[]>()), Times.AtLeastOnce);
