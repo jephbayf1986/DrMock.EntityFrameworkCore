@@ -1,4 +1,4 @@
-﻿namespace EzMoq.EfCore.Interfaces
+﻿namespace DrMock.EfCore.Interfaces
 {
     internal interface IVerifySave
     {

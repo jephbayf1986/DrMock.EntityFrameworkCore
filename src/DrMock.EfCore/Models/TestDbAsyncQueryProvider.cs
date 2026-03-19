@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 #endif
 
-namespace EzMoq.EfCore.Models
+namespace DrMock.EfCore.Models
 {
     public class TestDbAsyncQueryProvider<TEntity> : IAsyncQueryProvider
     {

@@ -1,4 +1,4 @@
-﻿namespace EzMoq.EfCore.Tests.Models
+﻿namespace DrMock.EfCore.Tests.Models
 {
     public class Person
     {

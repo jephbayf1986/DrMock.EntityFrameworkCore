@@ -1,8 +1,8 @@
-﻿using EzMoq.EfCore;
-using EzMoq.EfCore.Tests.Models;
+﻿using DrMock.EfCore;
+using DrMock.EfCore.Tests.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EzMoq.EfCore.Tests.Contexts
+namespace DrMock.EfCore.Tests.Contexts
 {
     public interface ITestDbContext : IDbContext
     {

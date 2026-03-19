@@ -1,6 +1,6 @@
 ﻿using dotRandom;
-using EzMoq.EfCore.Models;
-using EzMoq.EfCore.Options;
+using DrMock.EfCore.Models;
+using DrMock.EfCore.Options;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace EzMoq.EfCore.Builders
+namespace DrMock.EfCore.Builders
 {
     internal sealed class MockDbSetBuilder<T>
         where T : class, new()

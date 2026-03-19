@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 
-namespace EzMoq.EfCore.Extensions
+namespace DrMock.EfCore.Extensions
 {
     internal static class MockDbSetExtensions
     {

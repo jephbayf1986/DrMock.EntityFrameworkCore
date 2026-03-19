@@ -1,14 +1,14 @@
-﻿using EzMoq.EfCore.Tests.Models;
+﻿using DrMock.EfCore.Tests.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EzMoq.EfCore.Tests.Contexts
+namespace DrMock.EfCore.Tests.Contexts
 {
     public class TestDbContext : DbContext, ITestDbContext
     {
-        public DbSet<Person> People { get; set; }
+        public virtual DbSet<Person> People { get; set; }
 
-        public DbSet<Payroll> Payrolls { get; set; }
+        public virtual DbSet<Payroll> Payrolls { get; set; }
 
-        public DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
     }
 }

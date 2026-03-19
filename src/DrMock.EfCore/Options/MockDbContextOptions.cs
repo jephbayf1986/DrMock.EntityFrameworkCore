@@ -1,4 +1,4 @@
-﻿namespace EzMoq.EfCore.Options
+﻿namespace DrMock.EfCore.Options
 {
     public class MockDbContextOptions
     {

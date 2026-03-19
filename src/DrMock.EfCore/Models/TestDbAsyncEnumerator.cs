@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EzMoq.EfCore.Models
+namespace DrMock.EfCore.Models
 {
     internal class TestDbAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
