@@ -905,7 +905,7 @@ namespace DrMock.EfCore.Tests
         }
 
         [Fact]
-        public void GivenClass_WhenRangeUpdatedDirect_ShouldVerifyUpdatedCCorrectly()
+        public void GivenClass_WhenRangeUpdatedDirect_ShouldVerifyUpdatedCorrectly()
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
