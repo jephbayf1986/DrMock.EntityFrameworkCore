@@ -201,9 +201,9 @@ namespace DrMock.EfCore
                 List<Action> verifications = new List<Action>()
                 {
                     () => _mock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>()), times.Value),
-                    () => _mock.VerifyRangeAddedWithParams(matches, times.Value),
+                    () => _mock.VerifyRangeAddedAsyncWithParams(matches, times.Value),
                     () => dbSetMock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>()), times.Value),
-                    () => dbSetMock.VerifyRangeAddedWithParams(matches, times.Value)
+                    () => dbSetMock.VerifyRangeAddedAsyncWithParams(matches, times.Value)
                 };
 
                 verifications.EnsureOnlyOnePasses<T>(EfMethod.AddRange);
