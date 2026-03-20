@@ -21,6 +21,7 @@ namespace DrMock.EfCore.Helpers
                     passes++;
                 }
                 catch (MockException _) { }
+                catch (DrMockException _) { }
             }
 
             if (passes == 0)
@@ -40,6 +41,7 @@ namespace DrMock.EfCore.Helpers
                     passes++;
                 }
                 catch (MockException _) { }
+                catch (DrMockException _) { }
             }
 
             if (passes == 0)

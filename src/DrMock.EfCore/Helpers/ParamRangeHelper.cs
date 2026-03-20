@@ -1,122 +1,166 @@
-﻿using DrMock.EfCore.Models;
+﻿using DrMock.EfCore.Exceptions;
+using DrMock.EfCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace DrMock.EfCore.Helpers
 {
     internal static class ParamRangeHelper
     {
-        public static void VerifyRangeAddedWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+        public static void VerifyRangeAddedAsObjectArray<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
             where TContext : class, IDbContext
             where T : class, new()
         {
             mockDbContext.Verify(x => x.AddRange(It.IsAny<object[]>()));
-            mockDbContext.CheckInvocationsForMatches(matches, EfMethod.AddRange, times);
+            mockDbContext.CheckInvocationsForMatches<object, T>(matches, EfMethod.AddRange, times);
+        }
+        
+        public static void VerifyRangeAddedAsObjectNestedArray<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+            where TContext : class, IDbContext
+            where T : class, new()
+        {
+            mockDbContext.Verify(x => x.AddRange(It.IsAny<object[]>()));
+            mockDbContext.CheckInvocationsForMatches<object[], T>(matches, EfMethod.AddRange, times);
         }
 
-        public static void VerifyRangeAddedWithParams<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+        public static void VerifyRangeAdded<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
              where T : class, new()
         {
             mockDbSet.Verify(x => x.AddRange(It.IsAny<T[]>()));
-            mockDbSet.CheckDbSetInvocationsForMatches(matches, EfMethod.AddRange, times);
+            mockDbSet.CheckInvocationsForMatches<T, T>(matches, EfMethod.AddRange, times);
         }
 
-        public static void VerifyRangeAddedAsyncWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+        public static void VerifyRangeAddedAsyncAsObjectArray<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
             where TContext : class, IDbContext
             where T : class, new()
         {
             mockDbContext.Verify(x => x.AddRangeAsync(It.IsAny<object[]>()));
-            mockDbContext.CheckInvocationsForMatches(matches, EfMethod.AddRangeAsync, times);
+            mockDbContext.CheckInvocationsForMatches<object, T>(matches, EfMethod.AddRangeAsync, times);
         }
-        
-        public static void VerifyRangeAddedAsyncWithParams<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+
+        public static void VerifyRangeAddedAsyncAsObjectNestedArray<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+            where TContext : class, IDbContext
+            where T : class, new()
+        {
+            mockDbContext.Verify(x => x.AddRangeAsync(It.IsAny<object[]>()));
+            mockDbContext.CheckInvocationsForMatches<object[], T>(matches, EfMethod.AddRangeAsync, times);
+        }
+
+        public static void VerifyRangeAddedAsync<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
              where T : class, new()
         {
             mockDbSet.Verify(x => x.AddRangeAsync(It.IsAny<T[]>(), It.IsAny<CancellationToken>()));
-            mockDbSet.CheckDbSetInvocationsForMatches(matches, EfMethod.AddRangeAsync, times);
+            mockDbSet.CheckInvocationsForMatches<T, T>(matches, EfMethod.AddRangeAsync, times);
         }
 
-        public static void VerifyRangeUpdatedWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+        public static void VerifyRangeUpdatedAsObjectArray<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
             where TContext : class, IDbContext
             where T : class, new()
         {
             mockDbContext.Verify(x => x.UpdateRange(It.IsAny<object[]>()));
-            mockDbContext.CheckInvocationsForMatches(matches, EfMethod.UpdateRange, times);
+            mockDbContext.CheckInvocationsForMatches<object, T>(matches, EfMethod.UpdateRange, times);
+        }
+        
+        public static void VerifyRangeUpdatedAsObjectNestedArray<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+            where TContext : class, IDbContext
+            where T : class, new()
+        {
+            mockDbContext.Verify(x => x.UpdateRange(It.IsAny<object[]>()));
+            mockDbContext.CheckInvocationsForMatches<object[], T>(matches, EfMethod.UpdateRange, times);
         }
 
-        public static void VerifyRangeUpdatedWithParams<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+        public static void VerifyRangeUpdated<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
              where T : class, new()
         {
             mockDbSet.Verify(x => x.UpdateRange(It.IsAny<T[]>()));
-            mockDbSet.CheckDbSetInvocationsForMatches(matches, EfMethod.UpdateRange, times);
+            mockDbSet.CheckInvocationsForMatches<T, T>(matches, EfMethod.UpdateRange, times);
         }
 
-        public static void VerifyRangeRemovedWithParams<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+        public static void VerifyRangeRemovedAsObjectArray<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
             where TContext : class, IDbContext
             where T : class, new()
         {
             mockDbContext.Verify(x => x.RemoveRange(It.IsAny<object[]>()));
-            mockDbContext.CheckInvocationsForMatches(matches, EfMethod.RemoveRange, times);
+            mockDbContext.CheckInvocationsForMatches<object, T>(matches, EfMethod.RemoveRange, times);
         }
-        
-        public static void VerifyRangeRemovedWithParams<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+
+        public static void VerifyRangeRemovedAsObjectNestedArray<TContext, T>(this Mock<TContext> mockDbContext, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
+            where TContext : class, IDbContext
+            where T : class, new()
+        {
+            mockDbContext.Verify(x => x.RemoveRange(It.IsAny<object[]>()));
+            mockDbContext.CheckInvocationsForMatches<object[], T>(matches, EfMethod.RemoveRange, times);
+        }
+
+        public static void VerifyRangeRemoved<T>(this Mock<DbSet<T>> mockDbSet, Expression<Func<IEnumerable<T>, bool>> matches, Times times)
              where T : class, new()
         {
             mockDbSet.Verify(x => x.RemoveRange(It.IsAny<T[]>()));
-            mockDbSet.CheckDbSetInvocationsForMatches(matches, EfMethod.RemoveRange, times);
+            mockDbSet.CheckInvocationsForMatches<T, T>(matches, EfMethod.RemoveRange, times);
         }
 
-        public static void CheckInvocationsForMatches<T>(this Mock mock, Expression<Func<IEnumerable<T>, bool>> matches, EfMethod efMethod, Times times)
+        public static void CheckInvocationsForMatches<TIn, TOut>(this Mock mock, Expression<Func<IEnumerable<TOut>, bool>> matches, EfMethod efMethod, Times times)
         {
-            object[] captured = null;
-
-            mock.Invocations
+            var validInvocations = 0;
+            
+            var invocationsOfMethod = mock.Invocations
                 .Where(inv => inv.Method.Name == efMethod.ToString())
-                .ToList()
-                .ForEach(inv => captured = (object[])inv.Arguments[0]);
+                .ToList();
 
-            if (captured == null)
-                throw new Exception("AddRange was not called.");
-
-            var capturedCasted = captured.Select(x => (T)x);
-
-            var compiled = matches.Compile();
-            var result = compiled(capturedCasted);
-
-            // TODO Times Check
-
-            if (!result)
+            foreach (var invocation in invocationsOfMethod)
             {
-                throw new Exception("AddRange argument did not satisfy the predicate.");
+                var isValidInvocation = invocation.CheckForParameterMatches<TIn, TOut>(matches, efMethod);
+
+                if (isValidInvocation) validInvocations++;
             }
+
+            var validNumberOfInvocations = times.Validate(validInvocations);
+
+            if (!validNumberOfInvocations)
+                throw DrMockException.CallWasNotMade<TOut>(efMethod); // Change This
+
         }
 
-        public static void CheckDbSetInvocationsForMatches<T>(this Mock mock, Expression<Func<IEnumerable<T>, bool>> matches, EfMethod efMethod, Times times)
+        private static bool CheckForParameterMatches<TIn, TOut>(this IInvocation invocation, Expression<Func<IEnumerable<TOut>, bool>> matches, EfMethod efMethod)
         {
-            T[] captured = null;
+            IEnumerable<TIn> arguments;
 
-            mock.Invocations
-                .Where(inv => inv.Method.Name == efMethod.ToString())
-                .ToList()
-                .ForEach(inv => captured = (T[])inv.Arguments[0]);
+            try
+            {
+                arguments = (IList<TIn>)invocation.Arguments[0];
 
-            if (captured == null)
-                throw new Exception("AddRange was not called.");
+                arguments = arguments.ToList();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+             
+            IEnumerable<TOut> castedArguments = new List<TOut>();
+
+            try
+            {
+                if (typeof(TIn) == typeof(object[]))
+                    castedArguments = (arguments.First() as object[]).Select(x => (TOut) x).ToList();
+                else if (typeof(TIn) == typeof(object))
+                    castedArguments = arguments.Select(x => (TOut) (x as object)).ToList();
+                else
+                    castedArguments = arguments as TOut[];
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
 
             var compiled = matches.Compile();
-            var result = compiled(captured);
-
-            // TODO Times Check
-
-            if (!result)
-            {
-                throw new Exception("AddRange argument did not satisfy the predicate.");
-            }
+            return compiled(castedArguments);
         }
     }
 }

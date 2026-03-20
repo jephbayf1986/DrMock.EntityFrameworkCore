@@ -40,5 +40,17 @@ namespace DrMock.EfCore.Exceptions
         {
             return new DrMockException(typeof(T), efMethod, $"Call was made as expected but on both a DbSet AND the DbContext");
         }
+        
+        // Soft Exceptions - Expected to get caught
+
+        public static DrMockException CallWasNotMade<T>(EfMethod efMethod)
+        {
+            return new DrMockException(typeof(T), efMethod, $"Call was not made");
+        }
+
+        public static DrMockException CallWasWithDifferentParams<T>(EfMethod efMethod)
+        {
+            return new DrMockException(typeof(T), efMethod, $"Call was made with different parameters");
+        }
     }
 }

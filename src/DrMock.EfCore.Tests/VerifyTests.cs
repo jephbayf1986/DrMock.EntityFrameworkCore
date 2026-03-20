@@ -422,7 +422,15 @@ namespace DrMock.EfCore.Tests
             List<Person> newPeople = [newPerson1, newPerson2];
 
             // Act
+            sut.AddRange(newPeople);
+            sut.AddRange(newPeople);
+            sut.AddRange(newPerson1, newPerson2);
+            sut.AddRange(newPerson1, newPerson2);
+
             sut.People.AddRange(newPeople);
+            sut.People.AddRange(newPeople);
+            sut.People.AddRange(newPerson1, newPerson2);
+            sut.People.AddRange(newPerson1, newPerson2);
 
             // Assert
             mock.VerifyRangeAdded<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
