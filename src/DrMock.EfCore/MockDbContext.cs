@@ -146,7 +146,7 @@ namespace DrMock.EfCore
                     () => dbSetMock.VerifyRangeAddedWithParams(matches, times.Value)
                 };
 
-                verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
+                verifications.EnsureOnlyOnePasses<T>(EfMethod.AddRange);
             }
             else
             {
@@ -158,7 +158,7 @@ namespace DrMock.EfCore
                     () => dbSetMock.VerifyRangeAddedWithParams(matches, Times.AtLeastOnce())
                 };
 
-                verifications.EnsureAtLeastOnePasses<T>(EfMethod.Add);
+                verifications.EnsureAtLeastOnePasses<T>(EfMethod.AddRange);
             }
         }
 
@@ -175,7 +175,7 @@ namespace DrMock.EfCore
                 () => dbSetMock.VerifyRangeAddedWithParams(matches, Times.Once())
             };
 
-            verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
+            verifications.EnsureOnlyOnePasses<T>(EfMethod.AddRange);
         }
 
         public void VerifyRangeNeverAdded<T>(Expression<Func<IEnumerable<T>, bool>> matches)
@@ -206,7 +206,7 @@ namespace DrMock.EfCore
                     () => dbSetMock.VerifyRangeAddedWithParams(matches, times.Value)
                 };
 
-                verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
+                verifications.EnsureOnlyOnePasses<T>(EfMethod.AddRange);
             }
             else
             {
@@ -218,7 +218,7 @@ namespace DrMock.EfCore
                     () => dbSetMock.VerifyRangeAddedAsyncWithParams(matches, Times.AtLeastOnce())
                 };
 
-                verifications.EnsureAtLeastOnePasses<T>(EfMethod.Add);
+                verifications.EnsureAtLeastOnePasses<T>(EfMethod.AddRange);
             }
         }
 
