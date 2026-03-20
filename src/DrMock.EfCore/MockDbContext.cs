@@ -264,7 +264,7 @@ namespace DrMock.EfCore
                     () => dbSetMock.Verify(x => x.Update(It.Is(match)), times.Value)
                 };
 
-                verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
+                verifications.EnsureOnlyOnePasses<T>(EfMethod.Update);
             }
             else
             {
@@ -316,7 +316,7 @@ namespace DrMock.EfCore
                     () => dbSetMock.VerifyRangeUpdatedWithParams(matches, times.Value)
                 };
 
-                verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
+                verifications.EnsureOnlyOnePasses<T>(EfMethod.UpdateRange);
             }
             else
             {
@@ -328,7 +328,7 @@ namespace DrMock.EfCore
                     () => dbSetMock.VerifyRangeUpdatedWithParams(matches, Times.AtLeastOnce())
                 };
 
-                verifications.EnsureAtLeastOnePasses<T>(EfMethod.Add);
+                verifications.EnsureAtLeastOnePasses<T>(EfMethod.UpdateRange);
             }
         }
 
@@ -345,7 +345,7 @@ namespace DrMock.EfCore
                 () => dbSetMock.VerifyRangeUpdatedWithParams(matches, Times.Once())
             };
 
-            verifications.EnsureOnlyOnePasses<T>(EfMethod.AddRange);
+            verifications.EnsureOnlyOnePasses<T>(EfMethod.UpdateRange); 
         }
 
         public void VerifyRangeNeverUpdated<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
@@ -366,7 +366,7 @@ namespace DrMock.EfCore
                     () => dbSetMock.Verify(x => x.Remove(It.Is(match)), times.Value)
                 };
 
-                verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
+                verifications.EnsureOnlyOnePasses<T>(EfMethod.Remove);
             }
             else
             {
@@ -404,6 +404,36 @@ namespace DrMock.EfCore
             dbSetMock.Verify(x => x.Remove(It.Is(match)), Times.Never);
         }
 
+        public void VerifyRangeRemoved<T>(Expression<Func<IEnumerable<T>, bool>> matches, Times? times = null) where T : class, new()
+        {
+            var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
+
+            if (times.HasValue)
+            {
+                List<Action> verifications = new List<Action>()
+                {
+                    () => _mock.Verify(x => x.RemoveRange(It.Is(matches)), times.Value),
+                    () => _mock.VerifyRangeRemovedWithParams(matches, times.Value),
+                    () => dbSetMock.Verify(x => x.RemoveRange(It.Is(matches)), times.Value),
+                    () => dbSetMock.VerifyRangeRemovedWithParams(matches, times.Value)
+                };
+
+                verifications.EnsureOnlyOnePasses<T>(EfMethod.RemoveRange);
+            }
+            else
+            {
+                List<Action> verifications = new List<Action>()
+                {
+                    () => _mock.Verify(x => x.RemoveRange(It.Is(matches))),
+                    () => _mock.VerifyRangeRemovedWithParams(matches, Times.AtLeastOnce()),
+                    () => dbSetMock.Verify(x => x.RemoveRange(It.Is(matches))),
+                    () => dbSetMock.VerifyRangeRemovedWithParams(matches, Times.AtLeastOnce())
+                };
+
+                verifications.EnsureAtLeastOnePasses<T>(EfMethod.RemoveRange);
+            }
+        }
+
         public void VerifyRangeRemovedOnce<T>(Expression<Func<IEnumerable<T>, bool>> matches)
             where T : class, new()
         {
@@ -417,37 +447,7 @@ namespace DrMock.EfCore
                 () => dbSetMock.VerifyRangeRemovedWithParams(matches, Times.Once())
             };
 
-            verifications.EnsureOnlyOnePasses<T>(EfMethod.AddRange);
-        }
-
-        public void VerifyRangeRemoved<T>(Expression<Func<IEnumerable<T>, bool>> matches, Times? times = null) where T : class, new()
-        {
-            var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
-            
-            if (times.HasValue)
-            {
-                List<Action> verifications = new List<Action>()
-                {
-                    () => _mock.Verify(x => x.RemoveRange(It.Is(matches)), times.Value),
-                    () => _mock.VerifyRangeRemovedWithParams(matches, times.Value),
-                    () => dbSetMock.Verify(x => x.RemoveRange(It.Is(matches)), times.Value),
-                    () => dbSetMock.VerifyRangeRemovedWithParams(matches, times.Value)
-                };
-
-                verifications.EnsureOnlyOnePasses<T>(EfMethod.Add);
-            }
-            else
-            {
-                List<Action> verifications = new List<Action>()
-                {
-                    () => _mock.Verify(x => x.RemoveRange(It.Is(matches))),
-                    () => _mock.VerifyRangeRemovedWithParams(matches, Times.AtLeastOnce()),
-                    () => dbSetMock.Verify(x => x.RemoveRange(It.Is(matches))),
-                    () => dbSetMock.VerifyRangeRemovedWithParams(matches, Times.AtLeastOnce())
-                };
-
-                verifications.EnsureAtLeastOnePasses<T>(EfMethod.Add);
-            }
+            verifications.EnsureOnlyOnePasses<T>(EfMethod.RemoveRange);
         }
 
         public void VerifyRangeNeverRemoved<T>(Expression<Func<IEnumerable<T>, bool>> match)

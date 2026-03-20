@@ -45,7 +45,7 @@ namespace DrMock.EfCore.Helpers
             where TContext : class, IDbContext
             where T : class, new()
         {
-            mockDbContext.Verify(x => x.UpdateRange(It.IsAny<T[]>()));
+            mockDbContext.Verify(x => x.UpdateRange(It.IsAny<object[]>()));
             mockDbContext.CheckInvocationsForMatches(matches, EfMethod.UpdateRange, times);
         }
 
@@ -60,7 +60,7 @@ namespace DrMock.EfCore.Helpers
             where TContext : class, IDbContext
             where T : class, new()
         {
-            mockDbContext.Verify(x => x.RemoveRange(It.IsAny<T[]>()));
+            mockDbContext.Verify(x => x.RemoveRange(It.IsAny<object[]>()));
             mockDbContext.CheckInvocationsForMatches(matches, EfMethod.RemoveRange, times);
         }
         
