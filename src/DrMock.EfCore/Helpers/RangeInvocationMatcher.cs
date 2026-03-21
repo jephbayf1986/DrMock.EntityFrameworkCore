@@ -91,7 +91,7 @@ namespace DrMock.EfCore.Helpers
             mockDbSet.CheckInvocationsForMatches<T, T>(matches, EfMethod.RemoveRange, times);
         }
 
-        public static void CheckInvocationsForMatches<TIn, TOut>(this Mock mock, Expression<Func<IEnumerable<TOut>, bool>> matches, EfMethod efMethod, Times times)
+        private static void CheckInvocationsForMatches<TIn, TOut>(this Mock mock, Expression<Func<IEnumerable<TOut>, bool>> matches, EfMethod efMethod, Times times)
         {
             var validInvocations = 0;
             

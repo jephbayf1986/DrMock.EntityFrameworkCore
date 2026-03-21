@@ -7,6 +7,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace DrMock.EfCore
@@ -178,15 +179,12 @@ namespace DrMock.EfCore
         public void VerifyRangeNeverAdded<T>(Expression<Func<IEnumerable<T>, bool>> matches)
             where T : class, new()
         {
-            _mock.Verify(x => x.AddRange(It.Is(matches)), Times.Never);
-            //_mock.VerifyRangeAddedWithParams(matches, Times.Never());
+            _mock.VerifyRangeAddedAsObjects(matches, Times.Never());
+            _mock.VerifyRangeAddedAsClass(matches, Times.Never());
 
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
-            dbSetMock.Verify(x => x.AddRange(It.Is(matches)), Times.Never);
-            //dbSetMock.VerifyRangeAddedWithParams(matches, Times.Never());
-
-            // TO DO: Decide if this is even needed? ^
+            dbSetMock.VerifyRangeAdded(matches, Times.Never());
         }
 
         public void VerifyRangeAddedAsync<T>(Expression<Func<IEnumerable<T>, bool>> matches, Times? times = null) where T : class, new()
@@ -235,15 +233,12 @@ namespace DrMock.EfCore
         public void VerifyRangeNeverAddedAsync<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
-            _mock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>()), Times.Never);
-
-            //_mock.Verify(x => x.AddRangeAsync(It.Is(matches.ToArrayPredicate()), It.IsAny<CancellationToken>()), Times.Never);
+            _mock.VerifyRangeAddedAsyncAsObjects(matches, Times.Never());
+            _mock.VerifyRangeAddedAsyncAsClass(matches, Times.Never());
 
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
-            dbSetMock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>()), Times.Never);
-
-            //dbSetMock.Verify(x => x.AddRangeAsync(It.Is(matches.ToArrayPredicate()), It.IsAny<CancellationToken>()), Times.Never);
+            dbSetMock.VerifyRangeAddedAsync(matches, Times.Never());
         }
 
         public void VerifyUpdated<T>(Expression<Func<T, bool>> match, Times? times = null) where T : class, new()
@@ -342,7 +337,12 @@ namespace DrMock.EfCore
         public void VerifyRangeNeverUpdated<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
-            _mock.Verify(x => x.UpdateRange(It.Is(matches)), Times.Never);
+            _mock.VerifyRangeUpdatedAsObjects(matches, Times.Never());
+            _mock.VerifyRangeUpdatedAsClass(matches, Times.Never());
+
+            var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
+
+            dbSetMock.VerifyRangeUpdated(matches, Times.Never());
         }
 
         public void VerifyRemoved<T>(Expression<Func<T, bool>> match, Times? times = null) where T : class, new()
@@ -438,10 +438,15 @@ namespace DrMock.EfCore
             verifications.EnsureOnlyOnePasses<T>(EfMethod.RemoveRange);
         }
 
-        public void VerifyRangeNeverRemoved<T>(Expression<Func<IEnumerable<T>, bool>> match)
+        public void VerifyRangeNeverRemoved<T>(Expression<Func<IEnumerable<T>, bool>> matches)
             where T : class, new()
         {
-            _mock.Verify(x => x.RemoveRange(It.Is(match)), Times.Never);
+            _mock.VerifyRangeRemovedAsObjects(matches, Times.Never());
+            _mock.VerifyRangeRemovedAsClass(matches, Times.Never());
+
+            var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
+
+            dbSetMock.VerifyRangeRemoved(matches, Times.Never());
         }
 
         public void VerifyChangesSaved()
