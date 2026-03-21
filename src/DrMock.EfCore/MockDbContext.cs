@@ -140,10 +140,8 @@ namespace DrMock.EfCore
             {
                 List<Action> verifications = new List<Action>()
                 {
-                    () => _mock.Verify(x => x.AddRange(It.Is(matches)), times.Value),
-                    () => _mock.VerifyRangeAddedAsObjectArray(matches, times.Value),
-                    () => _mock.VerifyRangeAddedAsObjectNestedArray(matches, times.Value),
-                    () => dbSetMock.Verify(x => x.AddRange(It.Is(matches)), times.Value),
+                    () => _mock.VerifyRangeAddedAsObjects(matches, times.Value),
+                    () => _mock.VerifyRangeAddedAsClass(matches, times.Value),
                     () => dbSetMock.VerifyRangeAdded(matches, times.Value)
                 };
 
@@ -153,10 +151,8 @@ namespace DrMock.EfCore
             {
                 List<Action> verifications = new List<Action>()
                 {
-                    () => _mock.Verify(x => x.AddRange(It.Is(matches))),
-                    () => _mock.VerifyRangeAddedAsObjectArray(matches, Times.AtLeastOnce()),
-                    () => _mock.VerifyRangeAddedAsObjectNestedArray(matches, Times.AtLeastOnce()),
-                    () => dbSetMock.Verify(x => x.AddRange(It.Is(matches))),
+                    () => _mock.VerifyRangeAddedAsObjects(matches, Times.AtLeastOnce()),
+                    () => _mock.VerifyRangeAddedAsClass(matches, Times.AtLeastOnce()),
                     () => dbSetMock.VerifyRangeAdded(matches, Times.AtLeastOnce())
                 };
 
@@ -171,10 +167,8 @@ namespace DrMock.EfCore
 
             List<Action> verifications = new List<Action>()
             {
-                () => _mock.Verify(x => x.AddRange(It.Is(matches)), Times.Once()),
-                    () => _mock.VerifyRangeAddedAsObjectArray(matches, Times.Once()),
-                    () => _mock.VerifyRangeAddedAsObjectNestedArray(matches, Times.Once()),
-                () => dbSetMock.Verify(x => x.AddRange(It.Is(matches)), Times.Once()),
+                () => _mock.VerifyRangeAddedAsObjects(matches, Times.Once()),
+                () => _mock.VerifyRangeAddedAsClass(matches, Times.Once()),
                 () => dbSetMock.VerifyRangeAdded(matches, Times.Once())
             };
 
@@ -203,10 +197,8 @@ namespace DrMock.EfCore
             {
                 List<Action> verifications = new List<Action>()
                 {
-                    () => _mock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>()), times.Value),
-                    () => _mock.VerifyRangeAddedAsyncAsObjectArray(matches, times.Value),
-                    () => _mock.VerifyRangeAddedAsyncAsObjectNestedArray(matches, times.Value),
-                    () => dbSetMock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>()), times.Value),
+                    () => _mock.VerifyRangeAddedAsyncAsObjects(matches, times.Value),
+                    () => _mock.VerifyRangeAddedAsyncAsClass(matches, times.Value),
                     () => dbSetMock.VerifyRangeAddedAsync(matches, times.Value)
                 };
 
@@ -216,10 +208,8 @@ namespace DrMock.EfCore
             {
                 List<Action> verifications = new List<Action>()
                 {
-                    () => _mock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>())),
-                    () => _mock.VerifyRangeAddedAsyncAsObjectArray(matches, Times.AtLeastOnce()),
-                    () => _mock.VerifyRangeAddedAsyncAsObjectNestedArray(matches, Times.AtLeastOnce()),
-                    () => dbSetMock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>())),
+                    () => _mock.VerifyRangeAddedAsyncAsObjects(matches, Times.AtLeastOnce()),
+                    () => _mock.VerifyRangeAddedAsyncAsClass(matches, Times.AtLeastOnce()),
                     () => dbSetMock.VerifyRangeAddedAsync(matches, Times.AtLeastOnce())
                 };
 
@@ -234,11 +224,9 @@ namespace DrMock.EfCore
 
             List<Action> verifications = new List<Action>()
             {
-                () => _mock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny<CancellationToken>()), Times.Once()),
-                () => _mock.VerifyRangeAddedAsyncAsObjectArray(matches, Times.Once()),
-                () => _mock.VerifyRangeAddedAsyncAsObjectNestedArray(matches, Times.Once()),
-                () => dbSetMock.Verify(x => x.AddRangeAsync(It.Is(matches), It.IsAny < CancellationToken >()), Times.Once()),
-                () => dbSetMock.VerifyRangeAddedAsync(matches, Times.Once())
+                    () => _mock.VerifyRangeAddedAsyncAsObjects(matches, Times.Once()),
+                    () => _mock.VerifyRangeAddedAsyncAsClass(matches, Times.Once()),
+                    () => dbSetMock.VerifyRangeAddedAsync(matches, Times.Once())
             };
 
             verifications.EnsureOnlyOnePasses<T>(EfMethod.AddRange);
@@ -316,10 +304,8 @@ namespace DrMock.EfCore
             {
                 List<Action> verifications = new List<Action>()
                 {
-                    () => _mock.Verify(x => x.UpdateRange(It.Is(matches)), times.Value),
-                    () => _mock.VerifyRangeUpdatedAsObjectArray(matches, times.Value),
-                    () => _mock.VerifyRangeUpdatedAsObjectNestedArray(matches, times.Value),
-                    () => dbSetMock.Verify(x => x.UpdateRange(It.Is(matches)), times.Value),
+                    () => _mock.VerifyRangeUpdatedAsObjects(matches, times.Value),
+                    () => _mock.VerifyRangeUpdatedAsClass(matches, times.Value),
                     () => dbSetMock.VerifyRangeUpdated(matches, times.Value)
                 };
 
@@ -329,10 +315,8 @@ namespace DrMock.EfCore
             {
                 List<Action> verifications = new List<Action>()
                 {
-                    () => _mock.Verify(x => x.UpdateRange(It.Is(matches))),
-                    () => _mock.VerifyRangeUpdatedAsObjectArray(matches, Times.AtLeastOnce()),
-                    () => _mock.VerifyRangeUpdatedAsObjectNestedArray(matches, Times.AtLeastOnce()),
-                    () => dbSetMock.Verify(x => x.UpdateRange(It.Is(matches))),
+                    () => _mock.VerifyRangeUpdatedAsObjects(matches, Times.AtLeastOnce()),
+                    () => _mock.VerifyRangeUpdatedAsClass(matches, Times.AtLeastOnce()),
                     () => dbSetMock.VerifyRangeUpdated(matches, Times.AtLeastOnce())
                 };
 
@@ -347,10 +331,8 @@ namespace DrMock.EfCore
 
             List<Action> verifications = new List<Action>()
             {
-                () => _mock.Verify(x => x.UpdateRange(It.Is(matches)), Times.Once()),
-                () => _mock.VerifyRangeUpdatedAsObjectArray(matches, Times.Once()),
-                () => _mock.VerifyRangeUpdatedAsObjectNestedArray(matches, Times.Once()),
-                () => dbSetMock.Verify(x => x.UpdateRange(It.Is(matches)), Times.Once()),
+                () => _mock.VerifyRangeUpdatedAsObjects(matches, Times.Once()),
+                () => _mock.VerifyRangeUpdatedAsClass(matches, Times.Once()),
                 () => dbSetMock.VerifyRangeUpdated(matches, Times.Once())
             };
 
@@ -421,10 +403,8 @@ namespace DrMock.EfCore
             {
                 List<Action> verifications = new List<Action>()
                 {
-                    () => _mock.Verify(x => x.RemoveRange(It.Is(matches))),
-                    () => _mock.VerifyRangeRemovedAsObjectArray(matches, times.Value),
-                    () => _mock.VerifyRangeRemovedAsObjectNestedArray(matches, times.Value),
-                    () => dbSetMock.Verify(x => x.RemoveRange(It.Is(matches)), times.Value),
+                    () => _mock.VerifyRangeRemovedAsObjects(matches, times.Value),
+                    () => _mock.VerifyRangeRemovedAsClass(matches, times.Value),
                     () => dbSetMock.VerifyRangeRemoved(matches, times.Value)
                 };
 
@@ -434,10 +414,8 @@ namespace DrMock.EfCore
             {
                 List<Action> verifications = new List<Action>()
                 {
-                    () => _mock.Verify(x => x.RemoveRange(It.Is(matches))),
-                    () => _mock.VerifyRangeRemovedAsObjectArray(matches, Times.AtLeastOnce()),
-                    () => _mock.VerifyRangeRemovedAsObjectNestedArray(matches, Times.AtLeastOnce()),
-                    () => dbSetMock.Verify(x => x.RemoveRange(It.Is(matches))),
+                    () => _mock.VerifyRangeRemovedAsObjects(matches, Times.AtLeastOnce()),
+                    () => _mock.VerifyRangeRemovedAsClass(matches, Times.AtLeastOnce()),
                     () => dbSetMock.VerifyRangeRemoved(matches, Times.AtLeastOnce())
                 };
 
@@ -452,10 +430,8 @@ namespace DrMock.EfCore
 
             List<Action> verifications = new List<Action>()
             {
-                () => _mock.Verify(x => x.RemoveRange(It.Is(matches)), Times.Once()),
-                    () => _mock.VerifyRangeRemovedAsObjectArray(matches, Times.Once()),
-                    () => _mock.VerifyRangeRemovedAsObjectNestedArray(matches, Times.Once()),
-                () => dbSetMock.Verify(x => x.RemoveRange(It.Is(matches)), Times.Once()),
+                () => _mock.VerifyRangeRemovedAsObjects(matches, Times.Once()),
+                () => _mock.VerifyRangeRemovedAsClass(matches, Times.Once()),
                 () => dbSetMock.VerifyRangeRemoved(matches, Times.Once())
             };
 
