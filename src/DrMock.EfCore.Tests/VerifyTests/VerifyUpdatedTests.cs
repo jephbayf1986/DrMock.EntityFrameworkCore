@@ -256,7 +256,6 @@ namespace DrMock.EfCore.Tests.VerifyTests
             }
 
             // Assert
-
             mock.VerifyUpdated<Person>(x => x.FirstName == firstName
                                          && x.LastName == lastName, Times.Exactly(numberOfEvents));
 

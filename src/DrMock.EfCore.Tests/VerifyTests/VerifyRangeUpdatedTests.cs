@@ -309,5 +309,277 @@ namespace DrMock.EfCore.Tests.VerifyTests
             mock.VerifyRangeNeverUpdated<Person>(x => x.Any(p => p.FirstName == string.Empty && p.LastName == string.Empty)
                                                    && x.Any(p => p.FirstName == string.Empty && p.LastName == string.Empty));
         }
+
+        [Fact]
+        public void GivenInterface_WhenRangeUpdatedMultipleTimesDirect_ShouldVerifyUpdatedCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<ITestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName1 = RandomFirstName();
+            var lastName1 = RandomLastName();
+            var firstName2 = RandomFirstName();
+            var lastName2 = RandomLastName();
+
+            Person newPerson1 = new Person() { FirstName = firstName1, LastName = lastName1 };
+            Person newPerson2 = new Person() { FirstName = firstName2, LastName = lastName2 };
+
+            List<Person> newPeople = [newPerson1, newPerson2];
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.UpdateRange(newPeople);
+            }
+
+            // Assert
+            mock.VerifyRangeUpdated<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                              && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2), Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyRangeUpdatedOnce<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                                                                && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2)));
+        }
+
+        [Fact]
+        public void GivenClass_WhenRangeUpdatedMultipleTimesDirect_ShouldVerifyUpdatedCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<TestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName1 = RandomFirstName();
+            var lastName1 = RandomLastName();
+            var firstName2 = RandomFirstName();
+            var lastName2 = RandomLastName();
+
+            Person newPerson1 = new Person() { FirstName = firstName1, LastName = lastName1 };
+            Person newPerson2 = new Person() { FirstName = firstName2, LastName = lastName2 };
+
+            List<Person> newPeople = [newPerson1, newPerson2];
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.UpdateRange(newPeople);
+            }
+
+            // Assert
+            mock.VerifyRangeUpdated<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                              && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2), Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyRangeUpdatedOnce<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                                                                && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2)));
+        }
+
+        [Fact]
+        public void GivenInterface_WhenRangeUpdatedMultipleTimesOnDbSet_ShouldVerifyUpdatedCCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<ITestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName1 = RandomFirstName();
+            var lastName1 = RandomLastName();
+            var firstName2 = RandomFirstName();
+            var lastName2 = RandomLastName();
+
+            Person newPerson1 = new Person() { FirstName = firstName1, LastName = lastName1 };
+            Person newPerson2 = new Person() { FirstName = firstName2, LastName = lastName2 };
+
+            List<Person> newPeople = [newPerson1, newPerson2];
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.People.UpdateRange(newPeople);
+            }
+
+            // Assert
+            mock.VerifyRangeUpdated<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                              && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2), Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyRangeUpdatedOnce<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                                                                && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2)));
+        }
+
+        [Fact]
+        public void GivenClass_WhenRangeUpdatedMultipleTimesOnDbSet_ShouldVerifyUpdatedCCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<TestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName1 = RandomFirstName();
+            var lastName1 = RandomLastName();
+            var firstName2 = RandomFirstName();
+            var lastName2 = RandomLastName();
+
+            Person newPerson1 = new Person() { FirstName = firstName1, LastName = lastName1 };
+            Person newPerson2 = new Person() { FirstName = firstName2, LastName = lastName2 };
+
+            List<Person> newPeople = [newPerson1, newPerson2];
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.People.UpdateRange(newPeople);
+            }
+
+            // Assert
+            mock.VerifyRangeUpdated<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                              && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2), Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyRangeUpdatedOnce<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                                                                && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2)));
+        }
+
+        [Fact]
+        public void GivenInterface_WhenRangeUpdatedMultipleTimesDirect_WithParams_ShouldVerifyUpdatedCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<ITestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName1 = RandomFirstName();
+            var lastName1 = RandomLastName();
+            var firstName2 = RandomFirstName();
+            var lastName2 = RandomLastName();
+
+            Person newPerson1 = new Person() { FirstName = firstName1, LastName = lastName1 };
+            Person newPerson2 = new Person() { FirstName = firstName2, LastName = lastName2 };
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.UpdateRange(newPerson1, newPerson2);
+            }
+
+            // Assert
+            mock.VerifyRangeUpdated<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                              && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2), Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyRangeUpdatedOnce<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                                                                && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2)));
+        }
+
+        [Fact]
+        public void GivenClass_WhenRangeUpdatedMultipleTimesDirect_WithParams_ShouldVerifyUpdatedCCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<TestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName1 = RandomFirstName();
+            var lastName1 = RandomLastName();
+            var firstName2 = RandomFirstName();
+            var lastName2 = RandomLastName();
+
+            Person newPerson1 = new Person() { FirstName = firstName1, LastName = lastName1 };
+            Person newPerson2 = new Person() { FirstName = firstName2, LastName = lastName2 };
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.UpdateRange(newPerson1, newPerson2);
+            }
+
+            // Assert
+            mock.VerifyRangeUpdated<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                              && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2), Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyRangeUpdatedOnce<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                                                                && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2)));
+        }
+
+        [Fact]
+        public void GivenInterface_WhenRangeUpdatedMultipleTimesOnDbSet_WithParams_ShouldVerifyUpdatedCCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<ITestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName1 = RandomFirstName();
+            var lastName1 = RandomLastName();
+            var firstName2 = RandomFirstName();
+            var lastName2 = RandomLastName();
+
+            Person newPerson1 = new Person() { FirstName = firstName1, LastName = lastName1 };
+            Person newPerson2 = new Person() { FirstName = firstName2, LastName = lastName2 };
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.People.UpdateRange(newPerson1, newPerson2);
+            }
+
+            // Assert
+            mock.VerifyRangeUpdated<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                              && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2), Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyRangeUpdatedOnce<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                                                                && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2)));
+        }
+
+        [Fact]
+        public void GivenClass_WhenRangeUpdatedMultipleTimesOnDbSet_WithParams_ShouldVerifyUpdatedCCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<TestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName1 = RandomFirstName();
+            var lastName1 = RandomLastName();
+            var firstName2 = RandomFirstName();
+            var lastName2 = RandomLastName();
+
+            Person newPerson1 = new Person() { FirstName = firstName1, LastName = lastName1 };
+            Person newPerson2 = new Person() { FirstName = firstName2, LastName = lastName2 };
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.People.UpdateRange(newPerson1, newPerson2);
+            }
+
+            // Assert
+            mock.VerifyRangeUpdated<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                              && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2), Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyRangeUpdatedOnce<Person>(x => x.Any(p => p.FirstName == firstName1 && p.LastName == lastName1)
+                                                                                && x.Any(p => p.FirstName == firstName2 && p.LastName == lastName2)));
+        }
     }
 }
