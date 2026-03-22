@@ -141,5 +141,127 @@ namespace DrMock.EfCore.Tests.VerifyTests
             mock.VerifyNeverUpdated<Person>(x => x.FirstName == string.Empty
                                               && x.LastName == string.Empty);
         }
+
+        [Fact]
+        public void GivenInterface_WhenUpdatedMultipleTimesDirect_ShouldVerifyUpdatedCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<ITestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName = RandomFirstName();
+            var lastName = RandomLastName();
+
+            Person newPerson = new Person() { FirstName = firstName, LastName = lastName };
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.Update(newPerson);
+            }
+
+            // Assert
+            mock.VerifyUpdated<Person>(x => x.FirstName == firstName
+                                         && x.LastName == lastName, Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyUpdatedOnce<Person>(x => x.FirstName == firstName
+                                                                           && x.LastName == lastName));
+        }
+
+        [Fact]
+        public void GivenClass_WhenUpdatedMultipleTimesDirect_ShouldVerifyUpdatedCCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<TestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName = RandomFirstName();
+            var lastName = RandomLastName();
+
+            Person newPerson = new Person() { FirstName = firstName, LastName = lastName };
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.Update(newPerson);
+            }
+
+            // Assert
+            mock.VerifyUpdated<Person>(x => x.FirstName == firstName
+                                         && x.LastName == lastName, Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyUpdatedOnce<Person>(x => x.FirstName == firstName
+                                                                           && x.LastName == lastName));
+        }
+
+        [Fact]
+        public void GivenInterface_WhenUpdatedMultipleTimesOnDbSet_ShouldVerifyUpdatedCCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<ITestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName = RandomFirstName();
+            var lastName = RandomLastName();
+
+            Person newPerson = new Person() { FirstName = firstName, LastName = lastName };
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.People.Update(newPerson);
+            }
+
+            // Assert
+
+            mock.VerifyUpdated<Person>(x => x.FirstName == firstName
+                                         && x.LastName == lastName, Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyUpdatedOnce<Person>(x => x.FirstName == firstName
+                                                                           && x.LastName == lastName));
+        }
+
+        [Fact]
+        public void GivenClass_WhenUpdatedMultipleTimesOnDbSet_ShouldVerifyUpdatedCCorrectly()
+        {
+            // Arrange
+            var mock = new MockDbContext<TestDbContext>()
+                                .WithEntity<Person>();
+
+            var sut = mock.Object;
+
+            var firstName = RandomFirstName();
+            var lastName = RandomLastName();
+
+            Person newPerson = new Person() { FirstName = firstName, LastName = lastName };
+
+            var numberOfEvents = RandomByteBetween(2, 5);
+
+            // Act
+            for (int i = 0; i < numberOfEvents; i++)
+            {
+                sut.People.Update(newPerson);
+            }
+
+            // Assert
+
+            mock.VerifyUpdated<Person>(x => x.FirstName == firstName
+                                         && x.LastName == lastName, Times.Exactly(numberOfEvents));
+
+            Should.Throw<Exception>(() => mock.VerifyUpdatedOnce<Person>(x => x.FirstName == firstName
+                                                                           && x.LastName == lastName));
+        }
     }
 }

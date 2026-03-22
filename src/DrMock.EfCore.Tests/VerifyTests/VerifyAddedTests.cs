@@ -221,7 +221,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
             // Act
             for (int i = 0; i < numberOfEvents; i++)
             {
-                sut.Add(newPerson);
+                sut.People.Add(newPerson);
             }
 
             // Assert
@@ -251,7 +251,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
             // Act
             for (int i = 0; i < numberOfEvents; i++)
             {
-                sut.Add(newPerson);
+                sut.People.Add(newPerson);
             }
 
             // Assert
