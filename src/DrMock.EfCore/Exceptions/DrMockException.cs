@@ -1,6 +1,7 @@
 ﻿using DrMock.EfCore.Models;
 using Moq;
 using System;
+using System.Reflection;
 
 namespace DrMock.EfCore.Exceptions
 {
@@ -8,6 +9,11 @@ namespace DrMock.EfCore.Exceptions
     {
         private DrMockException(Type type, EfMethod efMethod, string message)
             : base($"Verify failed on EF property '{type.Name}' for method '{efMethod.ToString()}' with the following error: {message}")
+        {
+        }
+
+        private DrMockException(EfMethod efMethod, string message)
+            : base($"Verify failed on EF for method '{efMethod.ToString()}' with the following error: {message}")
         {
         }
 
@@ -33,24 +39,25 @@ namespace DrMock.EfCore.Exceptions
 
         public static DrMockException CallExpectedNotMade<T>(EfMethod efMethod)
         {
+            if (typeof(IDbContext).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo()))
+                return new DrMockException(efMethod, "Call was expected but never made on the DbContext");
+
             return new DrMockException(typeof(T), efMethod, "Call was expected but never made on either the DbContext or a valid DbSet");
         }
 
         public static DrMockException CallMadeOnBothContextAndSet<T>(EfMethod efMethod)
         {
+            if (typeof(IDbContext).GetTypeInfo().IsAssignableFrom(typeof(T).Ge‌​tTypeInfo()))
+                return new DrMockException(efMethod, "Call was made as expected but in multiple ways (ie. both with and without paramter 'acceptAllChangesOnSuccess' defined)");
+
             return new DrMockException(typeof(T), efMethod, $"Call was made as expected but on both a DbSet AND the DbContext");
         }
         
-        // Soft Exceptions - Expected to get caught
-
-        public static DrMockException CallWasNotMade<T>(EfMethod efMethod)
+        public static DrMockException CallMadeIncorrectFrequency<T>(EfMethod efMethod, Times timesExpected, int actualFrequency)
         {
-            return new DrMockException(typeof(T), efMethod, $"Call was not made");
-        }
+            timesExpected.Deconstruct(out int minExpected, out int maxExpected);
 
-        public static DrMockException CallWasWithDifferentParams<T>(EfMethod efMethod)
-        {
-            return new DrMockException(typeof(T), efMethod, $"Call was made with different parameters");
+            return new DrMockException(typeof(T), efMethod, $"Call was expected to be made between {minExpected} and {maxExpected} times, but was actually made {actualFrequency} times");
         }
     }
 }

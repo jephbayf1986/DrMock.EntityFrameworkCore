@@ -465,22 +465,80 @@ namespace DrMock.EfCore
 
         public void VerifyChangesSaved()
         {
-            _mock.Verify(x => x.SaveChanges(), Times.Once);
+            List<Action> verifications = new List<Action>()
+            {
+                () => _mock.Verify(x => x.SaveChanges()),
+                () => _mock.Verify(x => x.SaveChanges(It.IsAny<bool>()))
+            };
+
+            verifications.EnsureAtLeastOnePasses<TContext>(EfMethod.SaveChanges);
+        }
+
+        public void VerifyChangesSaved(Times times)
+        {
+            List<Action> verifications = new List<Action>()
+            {
+                () => _mock.Verify(x => x.SaveChanges(), times),
+                () => _mock.Verify(x => x.SaveChanges(It.IsAny<bool>()), times)
+            };
+
+            verifications.EnsureOnlyOnePasses<TContext>(EfMethod.SaveChanges);
+        }
+
+        public void VerifyChangesSavedOnce()
+        {
+            List<Action> verifications = new List<Action>()
+            {
+                () => _mock.Verify(x => x.SaveChanges(), Times.Once),
+                () => _mock.Verify(x => x.SaveChanges(It.IsAny<bool>()), Times.Once)
+            };
+
+            verifications.EnsureOnlyOnePasses<TContext>(EfMethod.SaveChanges);
         }
 
         public void VerifyChangesNeverSaved()
         {
             _mock.Verify(x => x.SaveChanges(), Times.Never);
+            _mock.Verify(x => x.SaveChanges(It.IsAny<bool>()), Times.Never);
         }
 
         public void VerifyChangesSavedAsync()
         {
-            _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            List<Action> verifications = new List<Action>()
+            {
+                () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>())),
+                () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            };
+
+            verifications.EnsureAtLeastOnePasses<TContext>(EfMethod.SaveChanges);
+        }
+
+        public void VerifyChangesSavedAsync(Times times)
+        {
+            List<Action> verifications = new List<Action>()
+            {
+                () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), times),
+                () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()), times)
+            };
+
+            verifications.EnsureOnlyOnePasses<TContext>(EfMethod.SaveChanges);
+        }
+
+        public void VerifyChangesSavedOnceAsync()
+        {
+            List<Action> verifications = new List<Action>()
+            {
+                () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once),
+                () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Once)
+            };
+
+            verifications.EnsureOnlyOnePasses<TContext>(EfMethod.SaveChanges);
         }
 
         public void VerifyChangesNeverSavedAsync()
         {
             _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+            _mock.Verify(x => x.SaveChangesAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         public MockDbContext<TContext> WithEntities<T>(params T[] items)

@@ -9,6 +9,8 @@
         Update,
         UpdateRange,
         Remove,
-        RemoveRange
+        RemoveRange,
+        SaveChanges,
+        SaveChangesAsync,
     }
 }

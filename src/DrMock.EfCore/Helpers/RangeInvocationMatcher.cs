@@ -109,7 +109,7 @@ namespace DrMock.EfCore.Helpers
             var validNumberOfInvocations = times.Validate(validInvocations);
 
             if (!validNumberOfInvocations)
-                throw DrMockException.CallWasNotMade<TOut>(efMethod); // Change This
+                throw DrMockException.CallMadeIncorrectFrequency<TOut>(efMethod, times, validInvocations);
 
         }
 
