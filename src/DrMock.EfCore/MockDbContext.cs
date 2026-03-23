@@ -14,23 +14,115 @@ using System.Threading.Tasks;
 
 namespace DrMock.EfCore
 {
-    public sealed class MockDbContext<TContext> : IMoqDirect<TContext>, IVerifyActions, IVerifySave where TContext : class, IDbContext
+    public sealed class MockDbContext<TContext> : IMoqDirect<TContext>, IBuilderSteps<TContext>, IVerifyActions, IVerifySave 
+        where TContext : class, IDbContext
     {
-        private readonly Mock<TContext> _mock;
-        private readonly MockDbContextOptions _options;
+        private Mock<TContext> _mock;
+        private MockDbContextBuilder<TContext> _builder;
 
         public MockDbContext(MockDbContextOptions options = null)
         {
-            _mock = new Mock<TContext>();
-
-            _options = options ?? new MockDbContextOptions();
+            _builder = new MockDbContextBuilder<TContext>(options ?? new MockDbContextOptions());
         }
 
-        internal MockDbContext(Mock<TContext> mock, MockDbContextOptions options = null)
+        internal MockDbContext(MockDbContextBuilder<TContext> builder)
         {
-            _mock = mock;
+            _builder = builder;
+        }
 
-            _options = options ?? new MockDbContextOptions();
+        public static MockDbContext<TContext> UseAllEntities(MockDbContextOptions options = null)
+        {
+            var builder = MockDbContextBuilder<TContext>.WithAllDbSets(options ?? new MockDbContextOptions());
+
+            return new MockDbContext<TContext>(builder);
+        }
+
+        public MockDbContext<TContext> UseEntity<T>() where T : class, new()
+        {
+            _builder = _builder.WithDbSet<T>();
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithRandomDataFor<T>(int? numberOfItems = null) where T : class, new()
+        {
+            _builder = _builder
+                .WithDbSet<T>()
+                .WithRandomDataInDbSet<T>();
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithExistingEntities<T>(params T[] entities) where T : class, new()
+        {
+            _builder = _builder
+                .WithDbSet<T>()
+                .WithDbSetData(entities);
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithoutNotExistingEntities<T>(params T[] entities) where T : class, new()
+        {
+            _builder = _builder
+                .WithDbSet<T>()
+                .WithRandomDataInDbSet<T>()
+                .EnsureDbSetDataDoesntContain(entities);
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithExistingEntity<T>(Expression<Func<T, bool>> matcher) where T : class, new()
+        {
+            _builder = _builder
+                .WithDbSet<T>()
+                .WithDbSetData(matcher);
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithoutNotExistingEntity<T>(Expression<Func<T, bool>> matcher) where T : class, new()
+        {
+            _builder = _builder
+                .WithDbSet<T>()
+                .WithRandomDataInDbSet<T>()
+                .EnsureDbSetDataDoesntContain(matcher);
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithActionOnAdd<T>(Action<T> action)
+            where T : class, new()
+        {
+            _builder = _builder.WithActionOnAdd(action);
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithActionOnAddAsync<T>(Action<T> action)
+            where T : class, new()
+        {
+            _builder = _builder.WithActionOnAddAsync(action);
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithExceptionThrownOnSaveChanges<TEx>()
+            where TEx : Exception, new()
+        {
+            _mock.Setup(x => x.SaveChanges())
+                 .Throws<TEx>();
+
+            return this;
+        }
+
+        public MockDbContext<TContext> WithExceptionThrownOnSaveChangesAsync<TEx>()
+            where TEx : Exception, new()
+        {
+            _mock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+                 .Throws<TEx>();
+
+            return this;
         }
 
         public MockDbSet<T> GetMockDbSet<T>() where T : class, new()
@@ -555,61 +647,6 @@ namespace DrMock.EfCore
             _mock.Verify(x => x.SaveChangesAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
-        public MockDbContext<TContext> WithEntities<T>(params T[] items)
-            where T : class, new()
-        {
-            var mockDbSet = new MockDbSetBuilder<T>(_options)
-                                    .WithEntities(items)
-                                    .Build();
-
-            _mock.SetMockDbSetAttribute(mockDbSet.Object);
-
-            return this;
-        }
-
-        public MockDbContext<TContext> WithEntity<T>(params Action<T>[] actions)
-            where T : class, new()
-        {
-            var mockDbSet = new MockDbSetBuilder<T>(_options)
-                                    .WithEntity(actions)
-                                    .Build();
-
-            _mock.SetMockDbSetAttribute(mockDbSet.Object);
-
-            return this;
-        }
-
-        public MockDbContext<TContext> WithActionOnAdd<T>(Action<T> action)
-            where T : class, new()
-        {
-            var mockDbSet = new MockDbSetBuilder<T>(_options)
-                                    .WithRandomData()
-                                    .WithCallBackOnAdd(action)
-                                    .Build();
-
-            _mock.SetMockDbSetAttribute(mockDbSet.Object);
-
-            return this;
-        }
-
-        public MockDbContext<TContext> WithExceptionThrownOnSaveChanges<TEx>()
-            where TEx : Exception, new()
-        {
-            _mock.Setup(x => x.SaveChanges())
-                 .Throws<TEx>();
-
-            return this;
-        }
-
-        public MockDbContext<TContext> WithExceptionThrownOnSaveChangesAsync<TEx>()
-            where TEx : Exception, new()
-        {
-            _mock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
-                 .Throws<TEx>();
-
-            return this;
-        }
-
         public ISetup<TContext> Setup(Expression<Action<TContext>> expression)
         {
             return _mock.Setup(expression);
@@ -879,6 +916,8 @@ namespace DrMock.EfCore
         {
             get
             {
+                _mock = _builder.Build();
+
                 return _mock.Object;
             }
         }

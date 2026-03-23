@@ -6,11 +6,24 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 
 namespace DrMock.EfCore.Builders
 {
-    internal sealed class MockDbSetBuilder<T>
+    internal class MockDbSetBuilder 
+    {
+        public static MockDbSetBuilder Create(Type type, MockDbContextOptions options)
+        {
+            Type mockDbSetType = typeof(MockDbSetBuilder<>).MakeGenericType(type);
+
+            return Activator.CreateInstance(mockDbSetType, new object[] { options }) as MockDbSetBuilder;
+        }
+
+        public virtual object Build() { return null; }
+    }
+
+    internal sealed class MockDbSetBuilder<T> : MockDbSetBuilder
         where T : class, new()
     {
         private Mock<DbSet<T>> _mock;
@@ -30,11 +43,11 @@ namespace DrMock.EfCore.Builders
             return this;
         }
 
-        public MockDbSetBuilder<T> WithRandomData()
+        public MockDbSetBuilder<T> WithRandomData(int? numberOfItems = 5)
         {
             ICollection<T> items = new List<T>();
 
-            for (var i = 0; i < _options.MinItemsInDbSet; i++)
+            for (var i = 0; i < numberOfItems; i++)
                 items.Add(DotRandom.GenerateRandom<T>());
 
             SetDbSetData(items);
@@ -42,7 +55,7 @@ namespace DrMock.EfCore.Builders
             return this;
         }
 
-        public MockDbSetBuilder<T> WithEntities(params T[] entities)
+        public MockDbSetBuilder<T> EnsurePresent(params T[] entities)
         {
             ICollection<T> items = entities.ToList();
 
@@ -60,27 +73,23 @@ namespace DrMock.EfCore.Builders
             return this;
         }
 
-        public MockDbSetBuilder<T> WithEntity(params Action<T>[] actions)
+        public MockDbSetBuilder<T> EnsureNotPresent(params T[] entities)
         {
-            ICollection<T> items = new List<T>();
+            // TO DO This
 
-            var numberOfItems = _options.MinItemsInDbSet;
-            var itemToAction = DotRandom.RandomIntBetween(0, numberOfItems - 1);
+            return this;
+        }
 
-            for (var i = 0; i < numberOfItems; i++)
-            {
-                var item = DotRandom.GenerateRandom<T>();
+        public MockDbSetBuilder<T> WithEntityMatch(Expression<Func<T, bool>> matcher)
+        {
+            // TO DO This
 
-                if (i == itemToAction)
-                {
-                    foreach (var action in actions)
-                        action(item);
-                }
+            return this;
+        }
 
-                items.Add(item);
-            }
-
-            SetDbSetData(items);
+        public MockDbSetBuilder<T> WithoutEntityMatch(Expression<Func<T, bool>> matcher)
+        {
+            // TO DO This
 
             return this;
         }
@@ -102,7 +111,21 @@ namespace DrMock.EfCore.Builders
             _mock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryableData.GetEnumerator());
         }
 
-        public Mock<DbSet<T>> Build()
+        public MockDbSetBuilder<T> WithActionOnAdd(Action<T> action)
+        {
+            _mock.Setup(x => x.Add(It.IsAny<T>())).Callback(action);
+
+            return this;
+        }
+
+        public MockDbSetBuilder<T> WithActionOnAddAsync(Action<T> action)
+        {
+            _mock.Setup(x => x.AddAsync(It.IsAny<T>(), It.IsAny<CancellationToken>())).Callback(action);
+
+            return this;
+        }
+
+        public override object Build()
         {
             return _mock;
         }

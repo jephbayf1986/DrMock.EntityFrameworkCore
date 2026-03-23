@@ -2,6 +2,6 @@
 {
     public class MockDbContextOptions
     {
-        public int MinItemsInDbSet { get; set; } = 5;
+        public int? MinItemsInDbSet { get; set; }
     }
 }

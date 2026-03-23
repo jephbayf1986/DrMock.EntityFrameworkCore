@@ -24,17 +24,32 @@ namespace DrMock.EfCore.Exceptions
 
         public static DrMockException DbSetNotFoundForProperty<T>()
         {
-            return new DrMockException($"No DbSet of type {typeof(T).Name} was found on the DbContext");
+            return DbSetNotFoundForProperty(typeof(T));
+        }
+
+        public static DrMockException DbSetNotFoundForProperty(Type type)
+        {
+            return new DrMockException($"No DbSet of type {type.Name} was found on the DbContext");
         }
 
         public static DrMockException MultipleProperiesForSameType<T>()
         {
-            return new DrMockException($"DrMock limits to one DbSet of each type. Multiple DbSets found for type {typeof(T).Name} would lead to unexpected behavoir.");
+            return MultipleProperiesForSameType(typeof(T));
+        }
+
+        public static DrMockException MultipleProperiesForSameType(Type type)
+        {
+            return new DrMockException($"DrMock limits to one DbSet of each type. Multiple DbSets found for type {type.Name} would lead to unexpected behavoir.");
         }
 
         public static DrMockException NonVirtualProperty<T>()
         {
-            return new DrMockException($"DbSet properties need to be set to Virtual. The DbSet for type {typeof(T).Name} is not virtual");
+            return NonVirtualProperty(typeof(T));
+        }
+
+        public static DrMockException NonVirtualProperty(Type type)
+        {
+            return new DrMockException($"DbSet properties need to be set to Virtual. The DbSet for type {type.Name} is not virtual");
         }
 
         public static DrMockException CallExpectedNotMade<T>(EfMethod efMethod)

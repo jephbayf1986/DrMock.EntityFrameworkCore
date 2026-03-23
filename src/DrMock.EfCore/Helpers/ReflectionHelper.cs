@@ -55,6 +55,57 @@ namespace DrMock.EfCore.Helpers
             mockContext.Setup(lambda).Returns(value);
         }
 
+        public static void SetMockDbSetAttribute<TContext>(this Mock<TContext> mockContext, Type genericType, object value)
+            where TContext : class
+        {
+            var param = Expression.Parameter(typeof(TContext), "x");
+
+            var dbSetType = typeof(DbSet<>).MakeGenericType(genericType);
+            
+            var propertyMatches = typeof(TContext).GetProperties()
+                                                .Where(x => x.PropertyType == dbSetType);
+
+            if (!propertyMatches.Any())
+                throw DrMockException.DbSetNotFoundForProperty(genericType);
+
+            if (propertyMatches.Count() > 1)
+                throw DrMockException.MultipleProperiesForSameType(genericType);
+
+            var propertyMatch = propertyMatches.First();
+            var propertyGetter = propertyMatch.GetGetMethod(true);
+            var isVirtualProp = propertyGetter.IsVirtual && !propertyGetter.IsFinal;
+
+            if (!isVirtualProp)
+                throw DrMockException.NonVirtualProperty(genericType);
+
+            var property = Expression.Property(param, propertyMatch.Name);
+            var dbSetAccessor = typeof(Func<,>).MakeGenericType(typeof(TContext), dbSetType);
+            var lambda = Expression.Lambda(dbSetAccessor, property, param);
+
+            // Aim for mockContext.Setup(lambda).Returns(value);
+
+            var setupMethod = typeof(Mock<TContext>)
+                    .GetMethods()
+                    .First(m => m.Name == "Setup" && m.GetParameters().Length == 1)
+                    .MakeGenericMethod(dbSetType);
+
+            var setupResult = setupMethod.Invoke(mockContext, new object[] { lambda });
+
+            var returnsMethod = setupResult.GetType()
+                .GetMethod("Returns", new[] { dbSetType });
+
+            returnsMethod.Invoke(setupResult, new[] { value });
+        }
+
+        public static IEnumerable<Type> GetDbSetTypes<TContext>()
+            where TContext : class, IDbContext
+        {
+            var propertyMatches = typeof(TContext)
+                .GetProperties()
+                .Where(x => x.PropertyType == typeof(DbSet<>));
+
+            return propertyMatches.Select(x => x.PropertyType.GetGenericArguments().First());
+        }
 
         public static Mock<T> GetMockFromObject<T>(this T mockedObject) where T : class
         {
