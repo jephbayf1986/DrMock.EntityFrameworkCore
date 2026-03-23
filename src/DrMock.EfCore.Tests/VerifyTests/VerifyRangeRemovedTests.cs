@@ -11,7 +11,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -50,7 +50,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -89,7 +89,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -128,7 +128,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -167,7 +167,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -204,7 +204,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -241,7 +241,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -278,7 +278,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -315,7 +315,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -350,7 +350,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -385,7 +385,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -420,7 +420,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -455,7 +455,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -488,7 +488,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -521,7 +521,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
@@ -554,7 +554,7 @@ namespace DrMock.EfCore.Tests.VerifyTests
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
-                                .WithEntity<Person>();
+                                .UseEntity<Person>();
 
             var sut = mock.Object;
 
