@@ -129,6 +129,30 @@ namespace DrMock.EfCore.Helpers
             return Expression.Lambda<Func<T[], bool>>(body, arrayParam);
         }
 
+        public static bool HasSharedPropertiesWith<T>(this T item1, T item2) 
+            where T : class
+        {
+            var properties = typeof(T)
+                .GetProperties()
+                .Where(x => x.PropertyType.IsValueType || x.PropertyType == typeof(string));
+
+            foreach (var property in properties)
+            {
+                var item1Value = property.GetValue(item1);
+                var item2Value = property.GetValue(item2);
+
+                bool isNullable = !property.GetType().IsValueType || Nullable.GetUnderlyingType(property.GetType()) != null;
+
+                if (isNullable && (item1Value is null || item2Value is null)) 
+                    continue;
+
+                if (item1Value == item2Value)
+                    return true;
+            }
+
+            return false;
+        }
+
         private class ReplaceVisitor : ExpressionVisitor
         {
             private readonly Expression _from;

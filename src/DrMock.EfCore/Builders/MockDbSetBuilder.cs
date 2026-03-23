@@ -1,4 +1,5 @@
 ﻿using dotRandom;
+using DrMock.EfCore.Helpers;
 using DrMock.EfCore.Models;
 using DrMock.EfCore.Options;
 using Microsoft.EntityFrameworkCore;
@@ -61,8 +62,6 @@ namespace DrMock.EfCore.Builders
 
         public MockDbSetBuilder<T> EnsurePresent(params T[] entities)
         {
-            // TODO : Ensure doesn't already exist
-
             foreach (var newEntity in entities)
                 _items.Add(newEntity);
 
@@ -71,7 +70,15 @@ namespace DrMock.EfCore.Builders
 
         public MockDbSetBuilder<T> EnsureNotPresent(params T[] entities)
         {
-            // TO DO This
+            foreach (var newEntity in entities)
+            {
+                var similarItems = _items.Where(x => x.HasSharedPropertiesWith(newEntity)).ToList();
+
+                foreach (var similarItem in similarItems)
+                {
+                    _items.Remove(similarItem);
+                }
+            }
 
             return this;
         }
