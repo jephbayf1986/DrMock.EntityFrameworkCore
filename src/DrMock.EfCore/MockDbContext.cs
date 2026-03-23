@@ -44,11 +44,11 @@ namespace DrMock.EfCore
             return this;
         }
 
-        public MockDbContext<TContext> WithRandomDataFor<T>(int? numberOfItems = null) where T : class, new()
+        public MockDbContext<TContext> WithRandomDataFor<T>(int numberOfItems = 5) where T : class, new()
         {
             _builder = _builder
                 .WithDbSet<T>()
-                .WithRandomDataInDbSet<T>();
+                .WithRandomDataInDbSet<T>(numberOfItems);
 
             return this;
         }

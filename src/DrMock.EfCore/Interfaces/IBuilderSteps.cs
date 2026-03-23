@@ -9,7 +9,7 @@ namespace DrMock.EfCore.Interfaces
         MockDbContext<TContext> UseEntity<T>()
             where T : class, new();
         
-        MockDbContext<TContext> WithRandomDataFor<T>(int? numberOfItems = null)
+        MockDbContext<TContext> WithRandomDataFor<T>(int numberOfItems = 5)
             where T : class, new();
 
         MockDbContext<TContext> WithExistingEntities<T>(params T[] entities)

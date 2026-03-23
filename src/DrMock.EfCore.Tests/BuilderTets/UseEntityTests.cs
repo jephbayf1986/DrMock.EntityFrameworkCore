@@ -7,7 +7,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
     public class UseEntityTests
     {
         [Fact]
-        public void GivenInterface_WhenUseAllEntities_CreateEachDbSetWithNoData()
+        public void GivenInterface_WhenUseEntity_CreateDbSetWithNoData()
         {
             // Arrange
             var mock = new MockDbContext<ITestDbContext>()
@@ -23,7 +23,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
-        public void GivenInterface_WhenUseAllEntitiesWithMinimum_CreateEachDbSetWithMinimumData()
+        public void GivenInterface_WhenUseEntityWithMinimum_CreateDbSetWithMinimumData()
         {
             // Arrange
             var numberToCreate = RandomByteBetween(2, 5);
@@ -46,7 +46,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
-        public void GivenClass_WhenUseAllEntities_CreateEachDbSetWithNoData()
+        public void GivenClass_WhenUseEntity_CreateDbSetWithNoData()
         {
             // Arrange
             var mock = new MockDbContext<TestDbContext>()
@@ -62,7 +62,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
-        public void GivenClass_WhenUseAllEntitiesWithMinimum_CreateEachDbSetWithMinimumData()
+        public void GivenClass_WhenUseEntityWithMinimum_CreateDbSetWithMinimumData()
         {
             // Arrange
             var numberToCreate = RandomByteBetween(2, 5);
