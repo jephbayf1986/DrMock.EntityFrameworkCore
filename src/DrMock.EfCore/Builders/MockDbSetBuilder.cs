@@ -28,11 +28,19 @@ namespace DrMock.EfCore.Builders
     {
         private Mock<DbSet<T>> _mock;
         private readonly MockDbContextOptions _options;
+        private readonly ICollection<T> _items;
 
         public MockDbSetBuilder(MockDbContextOptions options)
         {
             _mock = new Mock<DbSet<T>>();
             _options = options;
+            _items = new List<T>();
+
+            if (_options.MinItemsInDbSet.HasValue)
+            {
+                for (var i = 0; i < _options.MinItemsInDbSet.Value; i++)
+                    _items.Add(DotRandom.GenerateRandom<T>());
+            }
         }
 
         public MockDbSetBuilder<T> WithCallBackOnAdd(Action<T> action)
@@ -45,30 +53,18 @@ namespace DrMock.EfCore.Builders
 
         public MockDbSetBuilder<T> WithRandomData(int? numberOfItems = 5)
         {
-            ICollection<T> items = new List<T>();
-
             for (var i = 0; i < numberOfItems; i++)
-                items.Add(DotRandom.GenerateRandom<T>());
-
-            SetDbSetData(items);
+                _items.Add(DotRandom.GenerateRandom<T>());
 
             return this;
         }
 
         public MockDbSetBuilder<T> EnsurePresent(params T[] entities)
         {
-            ICollection<T> items = entities.ToList();
+            // TODO : Ensure doesn't already exist
 
-            // Fill remaining quota with random data
-            if (items.Count() < _options.MinItemsInDbSet)
-            {
-                var startPoint = items.Count() - 1;
-
-                for (var i = startPoint; i < _options.MinItemsInDbSet; i++)
-                    items.Add(DotRandom.GenerateRandom<T>());
-            }
-
-            SetDbSetData(items);
+            foreach (var newEntity in entities)
+                _items.Add(newEntity);
 
             return this;
         }
@@ -127,7 +123,9 @@ namespace DrMock.EfCore.Builders
 
         public override object Build()
         {
-            return _mock;
+            SetDbSetData(_items);
+
+            return _mock.Object;
         }
     }
 }

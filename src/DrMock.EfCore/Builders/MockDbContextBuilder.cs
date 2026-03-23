@@ -26,6 +26,7 @@ namespace DrMock.EfCore.Builders
         {
             _options = options;
             _mockContext = new Mock<TContext>();
+            _mockDbSets = new Dictionary<Type, MockDbSetBuilder>();
 
             foreach (var dbSetType in dbSetTypes)
             {

@@ -86,7 +86,7 @@ namespace DrMock.EfCore.Helpers
 
             var setupMethod = typeof(Mock<TContext>)
                     .GetMethods()
-                    .First(m => m.Name == "Setup" && m.GetParameters().Length == 1)
+                    .First(m => m.Name == "Setup" && m.GetParameters().Length == 1 && m.IsGenericMethodDefinition)
                     .MakeGenericMethod(dbSetType);
 
             var setupResult = setupMethod.Invoke(mockContext, new object[] { lambda });
@@ -102,7 +102,7 @@ namespace DrMock.EfCore.Helpers
         {
             var propertyMatches = typeof(TContext)
                 .GetProperties()
-                .Where(x => x.PropertyType == typeof(DbSet<>));
+                .Where(x => x.PropertyType.Name == typeof(DbSet<>).Name);
 
             return propertyMatches.Select(x => x.PropertyType.GetGenericArguments().First());
         }
