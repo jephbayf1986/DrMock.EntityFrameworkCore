@@ -24,7 +24,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
 
             var mock = new MockDbContext<ITestDbContext>()
                 .Include(person)
-                .DontInclude(person);
+                .Exclude(person);
 
             var dbContext = mock.Object;
 
@@ -56,7 +56,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
 
             var mock = new MockDbContext<TestDbContext>()
                 .Include(person)
-                .DontInclude(person);
+                .Exclude(person);
 
             var dbContext = mock.Object;
 

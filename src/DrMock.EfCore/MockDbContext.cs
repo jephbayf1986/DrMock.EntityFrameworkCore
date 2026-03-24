@@ -62,7 +62,7 @@ namespace DrMock.EfCore
             return this;
         }
 
-        public MockDbContext<TContext> DontInclude<T>(params T[] entities) where T : class, new()
+        public MockDbContext<TContext> Exclude<T>(params T[] entities) where T : class, new()
         {
             _builder = _builder
                 .WithDbSet<T>()
