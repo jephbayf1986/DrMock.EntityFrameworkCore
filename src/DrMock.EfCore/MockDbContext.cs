@@ -1,4 +1,4 @@
-﻿using DrMock.EfCore.Base;
+using DrMock.EfCore.Base;
 using DrMock.EfCore.Builders;
 using DrMock.EfCore.Helpers;
 using DrMock.EfCore.Interfaces;
@@ -23,7 +23,7 @@ namespace DrMock.EfCore
     public sealed class MockDbContext<TContext> : IMoqDirect<TContext>, IBuilderSteps<TContext>, IVerifyActions, IVerifySave 
         where TContext : class, IDbContext
     {
-        private Mock<TContext> _mock;
+        private Mock<TContext> _mock = null;
         private MockDbContextBuilder<TContext> _builder;
 
         /// <summary>
@@ -51,6 +51,41 @@ namespace DrMock.EfCore
             var builder = MockDbContextBuilder<TContext>.WithAllDbSets(options ?? new MockDbContextOptions());
 
             return new MockDbContext<TContext>(builder);
+        }
+
+        /// <summary>
+        /// Get Mock DbSet
+        /// For performing custom setup and verifications on a specific DbSet
+        /// </summary>
+        /// <typeparam name="T">Entity Type</typeparam>
+        /// <returns>MockDbSet Wrapper with all direct Moq methods</returns>
+        public MockDbSet<T> GetMockDbSet<T>() where T : class, new()
+        {
+            if (_mock is null)
+                return _builder
+                    .GetMockDbSet<T>()
+                    .BuildMockDbSet();
+
+            var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
+
+            return new MockDbSet<T>(dbSetMock);
+        }
+
+        /// <summary>
+        /// Set Mock DbSet
+        /// For performing custom setup and verifications on a specific DbSet
+        /// </summary>
+        /// <typeparam name="T">Entity Type</typeparam>
+        /// <param name="mockDbSet">MockDbSet Wrapper</param>
+        public void SetMockDbSet<T>(MockDbSet<T> mockDbSet) where T : class, new()
+        {
+            if (_mock is null)
+            {
+                _builder.SetDbSet(mockDbSet);
+                return;
+            }
+
+            _mock.SetMockDbSetAttribute(mockDbSet.Object);
         }
 
         public MockDbContext<TContext> UseEntity<T>() where T : class, new()
@@ -139,22 +174,11 @@ namespace DrMock.EfCore
             return this;
         }
 
-        // TO DO: Get Set according to weather Mock exists
-        public MockDbSet<T> GetMockDbSet<T>() where T : class, new()
-        {
-            var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
-
-            return new MockDbSet<T>(dbSetMock);
-        }
-
-        public void SetMockDbSet<T>(MockDbSet<T> mockDbSet) where T : class, new()
-        {
-            _mock.SetMockDbSetAttribute(mockDbSet.Object);
-        }
-
         public void VerifyAdded<T>(Expression<Func<T, bool>> match)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -169,6 +193,8 @@ namespace DrMock.EfCore
         public void VerifyAdded<T>(Expression<Func<T, bool>> match, Times times)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -183,6 +209,8 @@ namespace DrMock.EfCore
         public void VerifyAddedOnce<T>(Expression<Func<T, bool>> match)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -197,6 +225,8 @@ namespace DrMock.EfCore
         public void VerifyNeverAdded<T>(Expression<Func<T, bool>> match)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             _mock.Verify(x => x.Add(It.Is(match)), Times.Never);
 
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
@@ -207,6 +237,8 @@ namespace DrMock.EfCore
         public void VerifyAddedAsync<T>(Expression<Func<T, bool>> match)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -221,6 +253,8 @@ namespace DrMock.EfCore
         public void VerifyAddedAsync<T>(Expression<Func<T, bool>> match, Times times)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -235,6 +269,8 @@ namespace DrMock.EfCore
         public void VerifyAddedOnceAsync<T>(Expression<Func<T, bool>> match) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -249,6 +285,8 @@ namespace DrMock.EfCore
         public void VerifyNeverAddedAsync<T>(Expression<Func<T, bool>> match) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             _mock.Verify(x => x.AddAsync(It.Is(match), It.IsAny<CancellationToken>()), Times.Never);
 
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
@@ -259,6 +297,8 @@ namespace DrMock.EfCore
         public void VerifyRangeAdded<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -274,6 +314,8 @@ namespace DrMock.EfCore
         public void VerifyRangeAdded<T>(Expression<Func<IEnumerable<T>, bool>> matches, Times times)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -289,6 +331,8 @@ namespace DrMock.EfCore
         public void VerifyRangeAddedOnce<T>(Expression<Func<IEnumerable<T>, bool>> matches)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -304,6 +348,8 @@ namespace DrMock.EfCore
         public void VerifyRangeNeverAdded<T>(Expression<Func<IEnumerable<T>, bool>> matches)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRangeAddedAsObjects(matches, Times.Never());
             _mock.VerifyRangeAddedAsClass(matches, Times.Never());
 
@@ -315,6 +361,8 @@ namespace DrMock.EfCore
         public void VerifyRangeAddedAsync<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -330,6 +378,8 @@ namespace DrMock.EfCore
         public void VerifyRangeAddedAsync<T>(Expression<Func<IEnumerable<T>, bool>> matches, Times times) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -345,6 +395,8 @@ namespace DrMock.EfCore
         public void VerifyRangeAddedOnceAsync<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -360,6 +412,8 @@ namespace DrMock.EfCore
         public void VerifyRangeNeverAddedAsync<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRangeAddedAsyncAsObjects(matches, Times.Never());
             _mock.VerifyRangeAddedAsyncAsClass(matches, Times.Never());
 
@@ -371,6 +425,8 @@ namespace DrMock.EfCore
         public void VerifyUpdated<T>(Expression<Func<T, bool>> match) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -385,6 +441,8 @@ namespace DrMock.EfCore
         public void VerifyUpdated<T>(Expression<Func<T, bool>> match, Times times) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -399,6 +457,8 @@ namespace DrMock.EfCore
         public void VerifyUpdatedOnce<T>(Expression<Func<T, bool>> match)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -413,6 +473,8 @@ namespace DrMock.EfCore
         public void VerifyNeverUpdated<T>(Expression<Func<T, bool>> match)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             _mock.Verify(x => x.Update(It.Is(match)), Times.Never);
 
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
@@ -423,6 +485,8 @@ namespace DrMock.EfCore
         public void VerifyRangeUpdated<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -438,6 +502,8 @@ namespace DrMock.EfCore
         public void VerifyRangeUpdated<T>(Expression<Func<IEnumerable<T>, bool>> matches, Times times) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -453,6 +519,8 @@ namespace DrMock.EfCore
         public void VerifyRangeUpdatedOnce<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -468,6 +536,8 @@ namespace DrMock.EfCore
         public void VerifyRangeNeverUpdated<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRangeUpdatedAsObjects(matches, Times.Never());
             _mock.VerifyRangeUpdatedAsClass(matches, Times.Never());
 
@@ -479,6 +549,8 @@ namespace DrMock.EfCore
         public void VerifyRemoved<T>(Expression<Func<T, bool>> match) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -493,6 +565,8 @@ namespace DrMock.EfCore
         public void VerifyRemoved<T>(Expression<Func<T, bool>> match, Times times) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -507,6 +581,8 @@ namespace DrMock.EfCore
         public void VerifyRemovedOnce<T>(Expression<Func<T, bool>> match)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -521,6 +597,8 @@ namespace DrMock.EfCore
         public void VerifyNeverRemoved<T>(Expression<Func<T, bool>> match)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             _mock.Verify(x => x.Remove(It.Is(match)), Times.Never);
 
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
@@ -531,6 +609,8 @@ namespace DrMock.EfCore
         public void VerifyRangeRemoved<T>(Expression<Func<IEnumerable<T>, bool>> matches) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -546,6 +626,8 @@ namespace DrMock.EfCore
         public void VerifyRangeRemoved<T>(Expression<Func<IEnumerable<T>, bool>> matches, Times times) 
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -561,6 +643,8 @@ namespace DrMock.EfCore
         public void VerifyRangeRemovedOnce<T>(Expression<Func<IEnumerable<T>, bool>> matches)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
 
             List<Action> verifications = new List<Action>()
@@ -576,6 +660,8 @@ namespace DrMock.EfCore
         public void VerifyRangeNeverRemoved<T>(Expression<Func<IEnumerable<T>, bool>> matches)
             where T : class, new()
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRangeRemovedAsObjects(matches, Times.Never());
             _mock.VerifyRangeRemovedAsClass(matches, Times.Never());
 
@@ -586,6 +672,8 @@ namespace DrMock.EfCore
 
         public void VerifyChangesSaved()
         {
+            EnsureMockBuilt();
+
             List<Action> verifications = new List<Action>()
             {
                 () => _mock.Verify(x => x.SaveChanges()),
@@ -597,6 +685,8 @@ namespace DrMock.EfCore
 
         public void VerifyChangesSaved(Times times)
         {
+            EnsureMockBuilt();
+
             List<Action> verifications = new List<Action>()
             {
                 () => _mock.Verify(x => x.SaveChanges(), times),
@@ -608,6 +698,8 @@ namespace DrMock.EfCore
 
         public void VerifyChangesSavedOnce()
         {
+            EnsureMockBuilt();
+
             List<Action> verifications = new List<Action>()
             {
                 () => _mock.Verify(x => x.SaveChanges(), Times.Once),
@@ -619,12 +711,16 @@ namespace DrMock.EfCore
 
         public void VerifyChangesNeverSaved()
         {
+            EnsureMockBuilt();
+
             _mock.Verify(x => x.SaveChanges(), Times.Never);
             _mock.Verify(x => x.SaveChanges(It.IsAny<bool>()), Times.Never);
         }
 
         public void VerifyChangesSavedAsync()
         {
+            EnsureMockBuilt();
+
             List<Action> verifications = new List<Action>()
             {
                 () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>())),
@@ -636,6 +732,8 @@ namespace DrMock.EfCore
 
         public void VerifyChangesSavedAsync(Times times)
         {
+            EnsureMockBuilt();
+
             List<Action> verifications = new List<Action>()
             {
                 () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), times),
@@ -647,6 +745,8 @@ namespace DrMock.EfCore
 
         public void VerifyChangesSavedOnceAsync()
         {
+            EnsureMockBuilt();
+
             List<Action> verifications = new List<Action>()
             {
                 () => _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once),
@@ -658,6 +758,8 @@ namespace DrMock.EfCore
 
         public void VerifyChangesNeverSavedAsync()
         {
+            EnsureMockBuilt();
+
             _mock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
             _mock.Verify(x => x.SaveChangesAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Never);
         }
@@ -927,6 +1029,12 @@ namespace DrMock.EfCore
             return _mock.RaiseAsync(eventExpression, args);
         }
 
+        private void EnsureMockBuilt()
+        {
+            if (_mock is null)
+                _mock = _builder.Build();
+        }
+
         /// <summary>
         /// Exposes the mocked DbContext instance.
         /// </summary>
@@ -934,7 +1042,7 @@ namespace DrMock.EfCore
         {
             get
             {
-                _mock = _builder.Build();
+                EnsureMockBuilt();
 
                 return _mock.Object;
             }

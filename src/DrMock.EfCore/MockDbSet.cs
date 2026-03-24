@@ -13,6 +13,11 @@ namespace DrMock.EfCore
     {
         private readonly Mock<DbSet<TEntity>> _mock;
 
+        internal MockDbSet()
+        {
+            _mock = new Mock<DbSet<TEntity>>();
+        }
+
         internal MockDbSet(Mock<DbSet<TEntity>> mock)
         {
             _mock = mock;
@@ -281,6 +286,14 @@ namespace DrMock.EfCore
         public ISetupConditionResult<DbSet<TEntity>> When(Func<bool> condition)
         {
             return _mock.When(condition);
+        }
+
+        internal Mock<DbSet<TEntity>> UnderlyingMock
+        {
+            get
+            {
+                return _mock;
+            }
         }
 
         public DbSet<TEntity> Object

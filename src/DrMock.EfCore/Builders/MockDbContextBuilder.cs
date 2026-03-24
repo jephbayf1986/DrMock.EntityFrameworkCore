@@ -159,11 +159,25 @@ namespace DrMock.EfCore.Builders
             return this;
         }
 
+        public MockDbSetBuilder<T> GetMockDbSet<T>()
+            where T : class, new()
+        {
+            return GetOrCreateDbSet<T>();
+        }
+
+        public void SetDbSet<T>(MockDbSet<T> mock)
+            where T : class, new()
+        {
+            var builder = GetOrCreateDbSet<T>();
+
+            builder.SetMockDbSet(mock);
+        }
+
         public Mock<TContext> Build()
         { 
             foreach (var mockDbSetKeyValue in _mockDbSets)
             {
-                _mockContext.SetMockDbSetAttribute(mockDbSetKeyValue.Key, mockDbSetKeyValue.Value.Build());
+                _mockContext.SetMockDbSetAttribute(mockDbSetKeyValue.Key, mockDbSetKeyValue.Value.Object());
             }
 
             return _mockContext;

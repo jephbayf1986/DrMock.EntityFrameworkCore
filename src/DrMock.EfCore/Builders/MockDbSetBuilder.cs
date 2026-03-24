@@ -2,7 +2,6 @@
 using DrMock.EfCore.Helpers;
 using DrMock.EfCore.Models;
 using DrMock.EfCore.Options;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -21,19 +20,19 @@ namespace DrMock.EfCore.Builders
             return Activator.CreateInstance(mockDbSetType, new object[] { options }) as MockDbSetBuilder;
         }
 
-        public virtual object Build() { return null; }
+        public virtual object Object() { return null; }
     }
 
     internal sealed class MockDbSetBuilder<T> : MockDbSetBuilder
         where T : class, new()
     {
-        private Mock<DbSet<T>> _mock;
+        private MockDbSet<T> _mock;
         private readonly MockDbContextOptions _options;
         private readonly ICollection<T> _items;
 
         public MockDbSetBuilder(MockDbContextOptions options)
         {
-            _mock = new Mock<DbSet<T>>();
+            _mock = new MockDbSet<T>();
             _options = options;
             _items = new List<T>();
 
@@ -42,6 +41,11 @@ namespace DrMock.EfCore.Builders
                 for (var i = 0; i < _options.MinItemsInDbSet.Value; i++)
                     _items.Add(DotRandom.GenerateRandom<T>());
             }
+        }
+
+        public void SetMockDbSet(MockDbSet<T> newVersion)
+        {
+            _mock = newVersion;
         }
 
         public MockDbSetBuilder<T> WithCallBackOnAdd(Action<T> action)
@@ -118,17 +122,19 @@ namespace DrMock.EfCore.Builders
         {
             var queryableData = _items.AsQueryable();
 
-            _mock.As<IAsyncEnumerable<T>>()
+            var mock = _mock.UnderlyingMock;
+
+            mock.As<IAsyncEnumerable<T>>()
                .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
                .Returns(new TestDbAsyncEnumerator<T>(queryableData.GetEnumerator()));
 
-            _mock.As<IQueryable<T>>()
+            mock.As<IQueryable<T>>()
                 .Setup(m => m.Provider)
                 .Returns(new TestDbAsyncQueryProvider<T>(queryableData.Provider));
 
-            _mock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryableData.Expression);
-            _mock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryableData.ElementType);
-            _mock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryableData.GetEnumerator());
+            mock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryableData.Expression);
+            mock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryableData.ElementType);
+            mock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryableData.GetEnumerator());
         }
 
         public MockDbSetBuilder<T> WithActionOnAdd(Action<T> action)
@@ -147,11 +153,18 @@ namespace DrMock.EfCore.Builders
             return this;
         }
 
-        public override object Build()
+        public override object Object()
         {
             SetDbSetData();
 
             return _mock.Object;
+        }
+
+        public MockDbSet<T> BuildMockDbSet()
+        {
+            SetDbSetData();
+
+            return _mock;
         }
     }
 }
