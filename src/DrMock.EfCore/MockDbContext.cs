@@ -929,6 +929,9 @@ namespace DrMock.EfCore
             return _mock.RaiseAsync(eventExpression, args);
         }
 
+        /// <summary>
+        /// Exposes the mocked DbContext instance.
+        /// </summary>
         public TContext Object
         {
             get

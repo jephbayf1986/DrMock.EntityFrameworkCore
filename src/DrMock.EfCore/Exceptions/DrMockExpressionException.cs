@@ -6,13 +6,14 @@ namespace DrMock.EfCore.Exceptions
     /// <summary>
     /// DrMock Expression Exception
     /// Occurs when an expression is passed into Exists(...) method.
-    /// Example expressions which are supported:
+    /// </summary>
+    /// <example>
     /// x => x.Id == jobId
     /// x => x.EmployeeId == employee1Id || x.EmployeeId == employee2Id
     /// x => x.FirstName == "Joe" && x.LastName == "Bloggs"
     /// x => !x.IsManager
     /// x => x.Manager.Name == "Jill Smith"
-    /// </summary>
+    /// </example>
     public class DrMockExpressionException : Exception
     {
         private DrMockExpressionException(Expression expression, string message)
