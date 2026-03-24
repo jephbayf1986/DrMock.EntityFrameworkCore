@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DrMock.EfCore.Base;
+using System;
 using System.Linq.Expressions;
 
 namespace DrMock.EfCore.Interfaces

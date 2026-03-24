@@ -1,4 +1,5 @@
-﻿using DrMock.EfCore.Exceptions;
+﻿using DrMock.EfCore.Base;
+using DrMock.EfCore.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;

@@ -1,4 +1,5 @@
-﻿using DrMock.EfCore.Helpers;
+﻿using DrMock.EfCore.Base;
+using DrMock.EfCore.Helpers;
 using DrMock.EfCore.Options;
 using Moq;
 using System;
