@@ -71,23 +71,6 @@ namespace DrMock.EfCore
             return new MockDbSet<T>(dbSetMock);
         }
 
-        /// <summary>
-        /// Set Mock DbSet
-        /// For performing custom setup and verifications on a specific DbSet
-        /// </summary>
-        /// <typeparam name="T">Entity Type</typeparam>
-        /// <param name="mockDbSet">MockDbSet Wrapper</param>
-        public void SetMockDbSet<T>(MockDbSet<T> mockDbSet) where T : class, new()
-        {
-            if (_mock is null)
-            {
-                _builder.SetDbSet(mockDbSet);
-                return;
-            }
-
-            _mock.SetMockDbSetAttribute(mockDbSet.Object);
-        }
-
         public MockDbContext<TContext> UseEntity<T>() where T : class, new()
         {
             _builder = _builder.WithDbSet<T>();
