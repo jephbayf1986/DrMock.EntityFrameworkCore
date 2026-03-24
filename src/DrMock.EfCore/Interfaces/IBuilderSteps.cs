@@ -14,6 +14,7 @@ namespace DrMock.EfCore.Interfaces
         /// <summary>
         /// Use Entity
         /// Declares use of DbSet within a unit test scope of work
+        /// Ensures DbSet can then be called within scope without causing null reference exceptions
         /// </summary>
         /// <typeparam name="T">Type of Entity to be Used in DbSet</typeparam>
         /// <returns>Self</returns>

@@ -14,12 +14,21 @@ using System.Threading.Tasks;
 
 namespace DrMock.EfCore
 {
+    /// <summary>
+    /// Mock DbContext
+    /// Used to test Entity Framework Core inputs and outputs
+    /// </summary>
+    /// <typeparam name="TContext">Type of DbContext implementing IDbContext</typeparam>
     public sealed class MockDbContext<TContext> : IMoqDirect<TContext>, IBuilderSteps<TContext>, IVerifyActions, IVerifySave 
         where TContext : class, IDbContext
     {
         private Mock<TContext> _mock;
         private MockDbContextBuilder<TContext> _builder;
 
+        /// <summary>
+        /// Construct new instance of MockDbContext
+        /// </summary>
+        /// <param name="options">Options defining MockDbContext behavoir</param>
         public MockDbContext(MockDbContextOptions options = null)
         {
             _builder = new MockDbContextBuilder<TContext>(options ?? new MockDbContextOptions());
@@ -30,6 +39,12 @@ namespace DrMock.EfCore
             _builder = builder;
         }
 
+        /// <summary>
+        /// Use All Entities
+        /// Creates an instance of MockDbContext where each DbSet can be called without exceptions
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns>Instance of MockDbContext</returns>
         public static MockDbContext<TContext> UseAllEntities(MockDbContextOptions options = null)
         {
             var builder = MockDbContextBuilder<TContext>.WithAllDbSets(options ?? new MockDbContextOptions());
@@ -125,6 +140,7 @@ namespace DrMock.EfCore
             return this;
         }
 
+        // TO DO: Get Set according to weather Mock exists
         public MockDbSet<T> GetMockDbSet<T>() where T : class, new()
         {
             var dbSetMock = _mock.GetMockDbSetAttribute<TContext, T>();
