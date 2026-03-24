@@ -181,7 +181,15 @@ namespace DrMock.EfCore.Builders
             }
 
             return _mockContext;
-        } 
+        }
+
+        internal Mock<TContext> Mock
+        {
+            get
+            {
+                return _mockContext;
+            }
+        }
 
         private MockDbSetBuilder<T> GetOrCreateDbSet<T>()
             where T : class, new()

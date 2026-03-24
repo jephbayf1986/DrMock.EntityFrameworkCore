@@ -766,266 +766,346 @@ namespace DrMock.EfCore
 
         public ISetup<TContext> Setup(Expression<Action<TContext>> expression)
         {
-            return _mock.Setup(expression);
+            return _builder.Mock.Setup(expression);
         }
 
         public ISetup<TContext, TResult> Setup<TResult>(Expression<Func<TContext, TResult>> expression)
         {
-            return _mock.Setup(expression);
+            return _builder.Mock.Setup(expression);
         }
 
         public ISetupGetter<TContext, TProperty> SetupGet<TProperty>(Expression<Func<TContext, TProperty>> expression)
         {
-            return _mock.SetupGet(expression);
+            return _builder.Mock.SetupGet(expression);
         }
 
         public ISetupSetter<TContext, TProperty> SetupSet<TProperty>(Action<TContext> setterExpression)
         {
-            return _mock.SetupSet<TProperty>(setterExpression);
+            return _builder.Mock.SetupSet<TProperty>(setterExpression);
         }
 
         public ISetup<TContext> SetupSet(Action<TContext> setterExpression)
         {
-            return _mock.SetupSet(setterExpression);
+            return _builder.Mock.SetupSet(setterExpression);
         }
 
         public ISetup<TContext> SetupAdd(Action<TContext> addExpression)
         {
-            return _mock.SetupAdd(addExpression);
+            return _builder.Mock.SetupAdd(addExpression);
         }
 
         public ISetup<TContext> SetupRemove(Action<TContext> removeExpression)
         {
-            return _mock.SetupRemove(removeExpression);
+            return _builder.Mock.SetupRemove(removeExpression);
         }
 
         public Mock<TContext> SetupProperty<TProperty>(Expression<Func<TContext, TProperty>> property)
         {
-            return _mock.SetupProperty(property);
+            return _builder.Mock.SetupProperty(property);
         }
 
         public Mock<TContext> SetupProperty<TProperty>(Expression<Func<TContext, TProperty>> property, TProperty initialValue)
         {
-            return _mock.SetupProperty(property, initialValue);
+            return _builder.Mock.SetupProperty(property, initialValue);
         }
 
         public Mock<TContext> SetupAllProperties()
         {
-            return _mock.SetupAllProperties();
+            return _builder.Mock.SetupAllProperties();
         }
 
         public ISetupSequentialResult<TResult> SetupSequence<TResult>(Expression<Func<TContext, TResult>> expression)
         {
-            return _mock.SetupSequence(expression);
+            return _builder.Mock.SetupSequence(expression);
         }
 
         public ISetupSequentialAction SetupSequence(Expression<Action<TContext>> expression)
         {
-            return _mock.SetupSequence(expression);
+            return _builder.Mock.SetupSequence(expression);
         }
 
         public ISetupConditionResult<TContext> When(Func<bool> condition)
         {
-            return _mock.When(condition);
+            return _builder.Mock.When(condition);
         }
 
         public void Verify(Expression<Action<TContext>> expression)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression);
         }
 
         public void Verify(Expression<Action<TContext>> expression, Times times)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void Verify(Expression<Action<TContext>> expression, Func<Times> times)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void Verify(Expression<Action<TContext>> expression, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, failMessage);
         }
 
         public void Verify(Expression<Action<TContext>> expression, Times times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times, failMessage);
         }
 
         public void Verify(Expression<Action<TContext>> expression, Func<Times> times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void Verify<TResult>(Expression<Func<TContext, TResult>> expression)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression);
         }
 
         public void Verify<TResult>(Expression<Func<TContext, TResult>> expression, Times times)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void Verify<TResult>(Expression<Func<TContext, TResult>> expression, Func<Times> times)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void Verify<TResult>(Expression<Func<TContext, TResult>> expression, Func<Times> times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void Verify<TResult>(Expression<Func<TContext, TResult>> expression, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, failMessage);
         }
 
         public void Verify<TResult>(Expression<Func<TContext, TResult>> expression, Times times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void VerifyGet<TProperty>(Expression<Func<TContext, TProperty>> expression)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyGet(expression);
         }
 
         public void VerifyGet<TProperty>(Expression<Func<TContext, TProperty>> expression, Times times)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void VerifyGet<TProperty>(Expression<Func<TContext, TProperty>> expression, Func<Times> times)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void VerifyGet<TProperty>(Expression<Func<TContext, TProperty>> expression, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, failMessage);
         }
 
         public void VerifyGet<TProperty>(Expression<Func<TContext, TProperty>> expression, Times times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void VerifyGet<TProperty>(Expression<Func<TContext, TProperty>> expression, Func<Times> times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.Verify(expression, times);
         }
 
         public void VerifySet(Action<TContext> setterExpression)
         {
+            EnsureMockBuilt();
+
             _mock.VerifySet(setterExpression);
         }
 
         public void VerifySet(Action<TContext> setterExpression, Times times)
         {
+            EnsureMockBuilt();
+
             _mock.VerifySet(setterExpression, times);
         }
 
         public void VerifySet(Action<TContext> setterExpression, Func<Times> times)
         {
+            EnsureMockBuilt();
+
             _mock.VerifySet(setterExpression, times);
         }
 
         public void VerifySet(Action<TContext> setterExpression, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifySet(setterExpression, failMessage);
         }
 
         public void VerifySet(Action<TContext> setterExpression, Times times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifySet(setterExpression, times, failMessage);
         }
 
         public void VerifySet(Action<TContext> setterExpression, Func<Times> times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifySet(setterExpression, times, failMessage);
         }
 
         public void VerifyAdd(Action<TContext> addExpression)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyAdd(addExpression);
         }
 
         public void VerifyAdd(Action<TContext> addExpression, Times times)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyAdd(addExpression, times);
         }
 
         public void VerifyAdd(Action<TContext> addExpression, Func<Times> times)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyAdd(addExpression, times);
         }
 
         public void VerifyAdd(Action<TContext> addExpression, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyAdd(addExpression, failMessage);
         }
 
         public void VerifyAdd(Action<TContext> addExpression, Times times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyAdd(addExpression, times, failMessage);
         }
 
         public void VerifyAdd(Action<TContext> addExpression, Func<Times> times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyAdd(addExpression, times, failMessage);
         }
 
         public void VerifyRemove(Action<TContext> removeExpression)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRemove(removeExpression);
         }
 
         public void VerifyRemove(Action<TContext> removeExpression, Times times)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRemove(removeExpression, times);
         }
 
         public void VerifyRemove(Action<TContext> removeExpression, Func<Times> times)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRemove(removeExpression, times);
         }
 
         public void VerifyRemove(Action<TContext> removeExpression, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRemove(removeExpression, failMessage);
         }
 
         public void VerifyRemove(Action<TContext> removeExpression, Times times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRemove(removeExpression, times, failMessage);
         }
 
         public void VerifyRemove(Action<TContext> removeExpression, Func<Times> times, string failMessage)
         {
+            EnsureMockBuilt();
+
             _mock.VerifyRemove(removeExpression, times, failMessage);
         }
 
         public void VerifyNoOtherCalls()
         {
+            EnsureMockBuilt();
+
             _mock.VerifyNoOtherCalls();
         }
 
         public void Raise(Action<TContext> eventExpression, EventArgs args)
         {
+            // TO DO; FInd out hwat this does
+
             _mock.Raise(eventExpression, args);
         }
 
         public void Raise(Action<TContext> eventExpression, params object[] args)
         {
+            // TO DO; FInd out hwat this does
+
             _mock.Raise(eventExpression, args);
         }
 
         public Task RaiseAsync(Action<TContext> eventExpression, params object[] args)
         {
+            // TO DO; FInd out hwat this does
+
             return _mock.RaiseAsync(eventExpression, args);
         }
 
