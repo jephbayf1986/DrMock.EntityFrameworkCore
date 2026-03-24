@@ -1090,22 +1090,20 @@ namespace DrMock.EfCore
 
         public void Raise(Action<TContext> eventExpression, EventArgs args)
         {
-            // TO DO; FInd out hwat this does
+            EnsureMockBuilt();
 
             _mock.Raise(eventExpression, args);
         }
 
         public void Raise(Action<TContext> eventExpression, params object[] args)
         {
-            // TO DO; FInd out hwat this does
+            EnsureMockBuilt();
 
             _mock.Raise(eventExpression, args);
         }
 
         public Task RaiseAsync(Action<TContext> eventExpression, params object[] args)
         {
-            // TO DO; FInd out hwat this does
-
             return _mock.RaiseAsync(eventExpression, args);
         }
 

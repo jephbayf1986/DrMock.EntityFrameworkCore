@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace DrMock.EfCore
 {
+    /// <summary>
+    /// Mock DbSet
+    /// For custom direct calls to underlying Moq Methods
+    /// </summary>
+    /// <typeparam name="TEntity">The DbSet Entity</typeparam>
     public sealed class MockDbSet<TEntity> : IMoqDirect<DbSet<TEntity>> where TEntity : class
     {
         private readonly Mock<DbSet<TEntity>> _mock;
