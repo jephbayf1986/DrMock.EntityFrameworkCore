@@ -9,5 +9,7 @@
         public int Month { get; set; }
 
         public int PersonId { get; set; }
+
+        public Department? PayrollDepartment { get; set; }
     }
 }

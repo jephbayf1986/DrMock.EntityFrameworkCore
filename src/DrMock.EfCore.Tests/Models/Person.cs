@@ -14,6 +14,8 @@
 
         public int PayrollNumber { get; set; }
 
+        public bool IsManager { get; set; }
+
         public Payroll? Payroll { get; set; }
     }
 }
