@@ -2,12 +2,12 @@
 
   <PropertyGroup>
 	<TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
-    <RootNamespace>Mock.EFCore</RootNamespace>
+    <RootNamespace>DrMock.EFCore</RootNamespace>
 	<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	<PackageId>Mock.EFCore.Base</PackageId>
+	<PackageId>DrMock.EFCore.Base</PackageId>
 	<Authors>Jeph Bayfield</Authors>
-	<Product>Mock.EFCore.Base</Product>
-	<Title>Mock.EFCore.Base</Title>
+	<Product>DrMock.EFCore.Base</Product>
+	<Title>DrMock.EFCore.Base</Title>
 	<Description>A Superset of Moq which allows quick, easy and clear testing with Entity Framework Core (Base Interface only)</Description>
 	<Copyright>2026 jephbayf1986</Copyright>
 	<PackageProjectUrl></PackageProjectUrl>
