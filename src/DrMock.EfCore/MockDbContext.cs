@@ -53,7 +53,7 @@ namespace DrMock.EfCore
             return this;
         }
 
-        public MockDbContext<TContext> WithExistingEntities<T>(params T[] entities) where T : class, new()
+        public MockDbContext<TContext> Include<T>(params T[] entities) where T : class, new()
         {
             _builder = _builder
                 .WithDbSet<T>()
@@ -62,7 +62,7 @@ namespace DrMock.EfCore
             return this;
         }
 
-        public MockDbContext<TContext> WithoutNotExistingEntities<T>(params T[] entities) where T : class, new()
+        public MockDbContext<TContext> DontInclude<T>(params T[] entities) where T : class, new()
         {
             _builder = _builder
                 .WithDbSet<T>()
@@ -72,7 +72,7 @@ namespace DrMock.EfCore
             return this;
         }
 
-        public MockDbContext<TContext> WithExistingEntity<T>(Expression<Func<T, bool>> matcher) where T : class, new()
+        public MockDbContext<TContext> Exists<T>(Expression<Func<T, bool>> matcher) where T : class, new()
         {
             _builder = _builder
                 .WithDbSet<T>()
@@ -81,7 +81,7 @@ namespace DrMock.EfCore
             return this;
         }
 
-        public MockDbContext<TContext> WithoutNotExistingEntity<T>(Expression<Func<T, bool>> matcher) where T : class, new()
+        public MockDbContext<TContext> DoesNotExist<T>(Expression<Func<T, bool>> matcher) where T : class, new()
         {
             _builder = _builder
                 .WithDbSet<T>()

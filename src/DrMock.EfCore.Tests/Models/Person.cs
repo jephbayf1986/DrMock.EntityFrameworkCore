@@ -13,5 +13,7 @@
         public decimal Height { get; set; }
 
         public int PayrollNumber { get; set; }
+
+        public Payroll? Payroll { get; set; }
     }
 }

@@ -12,16 +12,16 @@ namespace DrMock.EfCore.Interfaces
         MockDbContext<TContext> WithRandomDataFor<T>(int numberOfItems = 5)
             where T : class, new();
 
-        MockDbContext<TContext> WithExistingEntities<T>(params T[] entities)
+        MockDbContext<TContext> Include<T>(params T[] entities)
             where T : class, new();
 
-        MockDbContext<TContext> WithoutNotExistingEntities<T>(params T[] entities)
+        MockDbContext<TContext> DontInclude<T>(params T[] entities)
             where T : class, new();
 
-        MockDbContext<TContext> WithExistingEntity<T>(Expression<Func<T, bool>> matcher)
+        MockDbContext<TContext> Exists<T>(Expression<Func<T, bool>> matcher)
             where T : class, new();
         
-        MockDbContext<TContext> WithoutNotExistingEntity<T>(Expression<Func<T, bool>> matcher)
+        MockDbContext<TContext> DoesNotExist<T>(Expression<Func<T, bool>> matcher)
             where T : class, new();
 
         MockDbContext<TContext> WithActionOnAdd<T>(Action<T> action)

@@ -3,10 +3,10 @@ using DrMock.EfCore.Tests.Models;
 
 namespace DrMock.EfCore.Tests.BuilderTets
 {
-    public class WithoutNotExistingEntitiesTests
+    public class DontIncludeTests
     {
         [Fact]
-        public void GivenInterface_WithoutNotExistingEntities_CreateDbSetRemovingPreexistingData()
+        public void GivenInterface_DontIncludeWithPreviousInclude_CreateDbSetRemovingPreexistingData()
         {
             // Arrange
             var personId = RandomIntBetween(100, 999);
@@ -23,8 +23,8 @@ namespace DrMock.EfCore.Tests.BuilderTets
             };
 
             var mock = new MockDbContext<ITestDbContext>()
-                .WithExistingEntities(person)
-                .WithoutNotExistingEntities(person);
+                .Include(person)
+                .DontInclude(person);
 
             var dbContext = mock.Object;
 
@@ -37,8 +37,8 @@ namespace DrMock.EfCore.Tests.BuilderTets
             personResult.ShouldBeNull();
         }
 
-        [Fact]
-        public void GivenClass_WithoutNotExistingEntities_CreateDbSetRemovingPreexistingData()
+        [Fact] 
+        public void GivenClass_DontIncludeWithPreviousInclude_CreateDbSetRemovingPreexistingData()
         {
             // Arrange
             var personId = RandomIntBetween(100, 999);
@@ -55,8 +55,8 @@ namespace DrMock.EfCore.Tests.BuilderTets
             };
 
             var mock = new MockDbContext<TestDbContext>()
-                .WithExistingEntities(person)
-                .WithoutNotExistingEntities(person);
+                .Include(person)
+                .DontInclude(person);
 
             var dbContext = mock.Object;
 

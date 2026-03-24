@@ -117,18 +117,6 @@ namespace DrMock.EfCore.Helpers
             return propInfo.FirstOrDefault().GetGetMethod().Invoke(mockedObject, null) as Mock<T>;
         }
 
-        public static Expression<Func<T[], bool>> ToArrayPredicate<T>(
-            this Expression<Func<IEnumerable<T>, bool>> enumerablePredicate)
-        {
-
-            var arrayParam = Expression.Parameter(typeof(T[]), enumerablePredicate.Parameters[0].Name);
-
-            var body = new ReplaceVisitor(enumerablePredicate.Parameters[0], arrayParam)
-                .Visit(enumerablePredicate.Body);
-
-            return Expression.Lambda<Func<T[], bool>>(body, arrayParam);
-        }
-
         public static bool HasSharedPropertiesWith<T>(this T item1, T item2) 
             where T : class
         {
@@ -153,57 +141,14 @@ namespace DrMock.EfCore.Helpers
             return false;
         }
 
-        private class ReplaceVisitor : ExpressionVisitor
+        public static IEnumerable<Action<T>> ToUpdateActions<T>(this Expression<Func<T, bool>> matcher)
+            where T : class
         {
-            private readonly Expression _from;
-            private readonly Expression _to;
+            var deconstructor = new ExpressionDeconstructor<T>();
 
-            public ReplaceVisitor(Expression from, Expression to)
-            {
-                _from = from;
-                _to = to;
-            }
+            deconstructor.Extract(matcher);
 
-            public override Expression Visit(Expression node)
-            {
-                return node == _from ? _to : base.Visit(node);
-            }
+            return deconstructor.GetActionExpressions();
         }
-
-
-        public static string BuildDiagnosticMessage<T>(
-            Expression<Func<IEnumerable<T>, bool>> predicate,
-            IEnumerable<T> actual)
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("Verification failed: The range did not satisfy the expected predicate.");
-            sb.AppendLine();
-
-            sb.AppendLine("Expected predicate:");
-            sb.AppendLine($"  {predicate}");
-            sb.AppendLine();
-
-            sb.AppendLine("Actual values passed to AddRange/UpdateRange:");
-            foreach (var item in actual)
-            {
-                sb.AppendLine("  - " + DumpObject(item));
-            }
-
-            return sb.ToString();
-        }
-
-
-        private static string DumpObject<T>(T obj)
-        {
-            if (obj == null)
-                return "<null>";
-
-            var props = typeof(T).GetProperties();
-            var parts = props.Select(p => $"{p.Name} = {p.GetValue(obj)}");
-            return string.Join(", ", parts);
-        }
-
-
     }
 }

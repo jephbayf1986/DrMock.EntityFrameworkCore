@@ -83,23 +83,40 @@ namespace DrMock.EfCore.Builders
             return this;
         }
 
-        public MockDbSetBuilder<T> WithEntityMatch(Expression<Func<T, bool>> matcher)
+        public MockDbSetBuilder<T> EnsurePresent(Expression<Func<T, bool>> matcher)
         {
-            // TO DO This
+            var itemExists = _items.Any(matcher.Compile());
+
+            if (!itemExists)
+            {
+                var newItem = DotRandom.GenerateRandom<T>();
+
+                var updateActions = matcher.ToUpdateActions();
+
+                foreach (var Action in updateActions)
+                    Action(newItem);
+
+                _items.Add(newItem);
+            }
 
             return this;
         }
 
-        public MockDbSetBuilder<T> WithoutEntityMatch(Expression<Func<T, bool>> matcher)
+        public MockDbSetBuilder<T> RemoveAny(Expression<Func<T, bool>> matcher)
         {
-            // TO DO This
+            var itemsToRemove = _items.Where(matcher.Compile()).ToList();
+
+            foreach (var item in itemsToRemove)
+            {
+                _items.Remove(item);
+            }
 
             return this;
         }
 
-        private void SetDbSetData(IEnumerable<T> data)
+        private void SetDbSetData()
         {
-            var queryableData = data.AsQueryable();
+            var queryableData = _items.AsQueryable();
 
             _mock.As<IAsyncEnumerable<T>>()
                .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
@@ -130,7 +147,7 @@ namespace DrMock.EfCore.Builders
 
         public override object Build()
         {
-            SetDbSetData(_items);
+            SetDbSetData();
 
             return _mock.Object;
         }

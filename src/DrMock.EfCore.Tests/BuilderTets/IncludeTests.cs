@@ -3,10 +3,10 @@ using DrMock.EfCore.Tests.Models;
 
 namespace DrMock.EfCore.Tests.BuilderTets
 {
-    public class WithExistingEntities
+    public class IncludeTests
     {
         [Fact]
-        public void GivenInterface_WithExistingEntities_CreateDbSetWithSomeData()
+        public void GivenInterface_OnInclude_CreateDbSetWithSomeData()
         {
             // Arrange
             var personId = RandomIntBetween(100, 999);
@@ -23,7 +23,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
             };
 
             var mock = new MockDbContext<ITestDbContext>()
-                .WithExistingEntities(person);
+                .Include(person);
 
             var dbContext = mock.Object;
 
@@ -45,7 +45,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
-        public void GivenInterface_WithExistingEntities_Multiple_CreateDbSetWithSomeData()
+        public void GivenInterface_IncludeMultiple_CreateDbSetWithSomeData()
         {
             // Arrange
             var person1Id = RandomIntBetween(100, 999);
@@ -74,7 +74,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
             };
 
             var mock = new MockDbContext<ITestDbContext>()
-                .WithExistingEntities(person1, person2);
+                .Include(person1, person2);
 
             var dbContext = mock.Object;
 
@@ -105,7 +105,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
-        public void GivenInterface_WithExistingEntities_ChainedDifferentTypes_CreateDbSetWithSomeData()
+        public void GivenInterface_IncludeChainedDifferentTypes_CreateDbSetWithSomeData()
         {
             // Arrange
             var personId = RandomIntBetween(100, 999);
@@ -131,8 +131,8 @@ namespace DrMock.EfCore.Tests.BuilderTets
             };
 
             var mock = new MockDbContext<ITestDbContext>()
-                .WithExistingEntities(person1)
-                .WithExistingEntities(department);
+                .Include(person1)
+                .Include(department);
 
             var dbContext = mock.Object;
 
@@ -160,7 +160,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
-        public void GivenClass_WithExistingEntities_CreateDbSetWithSomeData()
+        public void GivenInterface_IncludeAfterUseEntity_CreateDbSetWithSomeData()
         {
             // Arrange
             var personId = RandomIntBetween(100, 999);
@@ -176,8 +176,9 @@ namespace DrMock.EfCore.Tests.BuilderTets
                 PayrollNumber = RandomIntBetween(10000, 99999)
             };
 
-            var mock = new MockDbContext<TestDbContext>()
-                .WithExistingEntities(person);
+            var mock = new MockDbContext<ITestDbContext>()
+                .UseEntity<Person>()
+                .Include(person);
 
             var dbContext = mock.Object;
 
@@ -199,7 +200,46 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
-        public void GivenClass_WithExistingEntities_Multiple_CreateDbSetWithSomeData()
+        public void GivenClass_OnInclude_CreateDbSetWithSomeData()
+        {
+            // Arrange
+            var personId = RandomIntBetween(100, 999);
+            var personAge = RandomByteBetween(18, 65);
+
+            var person = new Person()
+            {
+                Id = personId,
+                FirstName = RandomFirstName(),
+                LastName = RandomLastName(),
+                DateOfBirth = RandomDateInYear(DateTime.Now.Year - personAge),
+                Height = ((decimal)RandomIntBetween(150, 200)) / 100,
+                PayrollNumber = RandomIntBetween(10000, 99999)
+            };
+
+            var mock = new MockDbContext<TestDbContext>()
+                .Include(person);
+
+            var dbContext = mock.Object;
+
+            // Act
+            var people = dbContext.People.ToList();
+            var personFound = dbContext.People.FirstOrDefault(x => x.Id == personId);
+
+            // Assert
+            people.ShouldContain(x => x.Id == personId);
+            people.Count(x => x.Id == personId).ShouldBe(1);
+            personFound.ShouldSatisfyAllConditions(
+                    x => x.Id.ShouldBe(personId),
+                    x => x.FirstName.ShouldBe(person.FirstName),
+                    x => x.LastName.ShouldBe(person.LastName),
+                    x => x.DateOfBirth.ShouldBe(person.DateOfBirth),
+                    x => x.Height.ShouldBe(person.Height),
+                    x => x.PayrollNumber.ShouldBe(person.PayrollNumber)
+                );
+        }
+
+        [Fact]
+        public void GivenClass_IncludeMultiple_CreateDbSetWithSomeData()
         {
             // Arrange
             var person1Id = RandomIntBetween(100, 999);
@@ -228,7 +268,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
             };
 
             var mock = new MockDbContext<TestDbContext>()
-                .WithExistingEntities(person1, person2);
+                .Include(person1, person2);
 
             var dbContext = mock.Object;
 
@@ -259,7 +299,7 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
-        public void GivenClass_WithExistingEntities_ChainedDifferentTypes_CreateDbSetWithSomeData() 
+        public void GivenClass_IncludeChainedDifferentTypes_CreateDbSetWithSomeData() 
         {
             // Arrange
             var personId = RandomIntBetween(100, 999);
@@ -285,8 +325,8 @@ namespace DrMock.EfCore.Tests.BuilderTets
             };
 
             var mock = new MockDbContext<TestDbContext>()
-                .WithExistingEntities(person1)
-                .WithExistingEntities(department);
+                .Include(person1)
+                .Include(department);
 
             var dbContext = mock.Object;
 
@@ -310,6 +350,46 @@ namespace DrMock.EfCore.Tests.BuilderTets
                     x => x.Id.ShouldBe(departmentId),
                     x => x.Name.ShouldBe(department.Name),
                     x => x.DateOpen.ShouldBe(department.DateOpen)
+                );
+        }
+
+        [Fact]
+        public void GivenClass_IncludeAfterUseEntity_CreateDbSetWithSomeData()
+        {
+            // Arrange
+            var personId = RandomIntBetween(100, 999);
+            var personAge = RandomByteBetween(18, 65);
+
+            var person = new Person()
+            {
+                Id = personId,
+                FirstName = RandomFirstName(),
+                LastName = RandomLastName(),
+                DateOfBirth = RandomDateInYear(DateTime.Now.Year - personAge),
+                Height = ((decimal)RandomIntBetween(150, 200)) / 100,
+                PayrollNumber = RandomIntBetween(10000, 99999)
+            };
+
+            var mock = new MockDbContext<TestDbContext>()
+                .UseEntity<Person>()
+                .Include(person);
+
+            var dbContext = mock.Object;
+
+            // Act
+            var people = dbContext.People.ToList();
+            var personFound = dbContext.People.FirstOrDefault(x => x.Id == personId);
+
+            // Assert
+            people.ShouldContain(x => x.Id == personId);
+            people.Count(x => x.Id == personId).ShouldBe(1);
+            personFound.ShouldSatisfyAllConditions(
+                    x => x.Id.ShouldBe(personId),
+                    x => x.FirstName.ShouldBe(person.FirstName),
+                    x => x.LastName.ShouldBe(person.LastName),
+                    x => x.DateOfBirth.ShouldBe(person.DateOfBirth),
+                    x => x.Height.ShouldBe(person.Height),
+                    x => x.PayrollNumber.ShouldBe(person.PayrollNumber)
                 );
         }
     }

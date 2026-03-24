@@ -97,7 +97,7 @@ namespace DrMock.EfCore.Builders
 
             var mockDbSet = GetOrCreateDbSet<T>();
 
-            mockDbSet.WithEntityMatch(matcher);
+            mockDbSet.EnsurePresent(matcher);
 
             return this;
         }
@@ -109,7 +109,7 @@ namespace DrMock.EfCore.Builders
 
             var mockDbSet = GetOrCreateDbSet<T>();
 
-            mockDbSet.WithoutEntityMatch(matcher);
+            mockDbSet.RemoveAny(matcher);
 
             return this;
         }
