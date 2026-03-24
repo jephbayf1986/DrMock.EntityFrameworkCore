@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DrMock.EfCore.Base\DrMock.EfCore.Base.csproj" />
     <ProjectReference Include="..\DrMock.EfCore\DrMock.EfCore.csproj" />
   </ItemGroup>
 

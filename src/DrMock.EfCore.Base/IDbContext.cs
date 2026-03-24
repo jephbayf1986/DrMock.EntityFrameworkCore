@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DrMock.EfCore
+namespace DrMock.EfCore.Base
 {
+    /// <summary>
+    /// IDbContext
+    /// The base interface required to be implemented on any DbContext used for Mocking with DrMock.EfCore
+    /// </summary>
     public interface IDbContext
     {
         int SaveChanges();
