@@ -126,8 +126,7 @@ namespace DrMock.EfCore
         public MockDbContext<TContext> WithExceptionThrownOnSaveChanges<TEx>()
             where TEx : Exception, new()
         {
-            _mock.Setup(x => x.SaveChanges())
-                 .Throws<TEx>();
+            _builder = _builder.ThrowOnSaveChanges<TEx>();
 
             return this;
         }
@@ -135,8 +134,7 @@ namespace DrMock.EfCore
         public MockDbContext<TContext> WithExceptionThrownOnSaveChangesAsync<TEx>()
             where TEx : Exception, new()
         {
-            _mock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
-                 .Throws<TEx>();
+            _builder = _builder.ThrowOnSaveChangesAsync<TEx>();
 
             return this;
         }

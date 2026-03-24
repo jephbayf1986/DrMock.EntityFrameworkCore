@@ -139,7 +139,7 @@ namespace DrMock.EfCore.Builders
             return this;
         }
 
-        public MockDbContextBuilder<TContext> WithExceptionThrownOnSaveChanges<TEx>()
+        public MockDbContextBuilder<TContext> ThrowOnSaveChanges<TEx>()
             where TEx : Exception, new()
         {
             _mockContext.Setup(x => x.SaveChanges())
@@ -148,7 +148,7 @@ namespace DrMock.EfCore.Builders
             return this;
         }
 
-        public MockDbContextBuilder<TContext> WithExceptionThrownOnSaveChangesAsync<TEx>()
+        public MockDbContextBuilder<TContext> ThrowOnSaveChangesAsync<TEx>()
             where TEx : Exception, new()
         {
             _mockContext.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
