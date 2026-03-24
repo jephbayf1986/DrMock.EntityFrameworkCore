@@ -11,7 +11,7 @@
 	<Description>A Superset of Moq which allows quick, easy and clear testing with Entity Framework Core (Base Interface only)</Description>
 	<Copyright>2026 jephbayf1986</Copyright>
 	<PackageProjectUrl></PackageProjectUrl>
-	<RepositoryUrl>https://github.com/jephbayf1986/dotRandom</RepositoryUrl>
+	<RepositoryUrl>https://github.com/jephbayf1986/DrMock.EntityFrameworkCore</RepositoryUrl>
 	<PackageTags>Database;Testing;C#</PackageTags>
 	<PackageReleaseNotes>Initial Release</PackageReleaseNotes>
 	<NeutralLanguage>en</NeutralLanguage>

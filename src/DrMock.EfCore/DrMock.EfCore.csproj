@@ -2,6 +2,24 @@
 
   <PropertyGroup>
 	<TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+	<RootNamespace>DrMock.EFCore</RootNamespace>
+	<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<PackageId>DrMock.EFCore</PackageId>
+	<Authors>Jeph Bayfield</Authors>
+	<Product>DrMock.EFCore</Product>
+	<Title>DrMock.EFCore</Title>
+	<Description>A Superset of Moq which allows quick, easy and clear testing with Entity Framework Core (Base Interface only)</Description>
+	<Copyright>2026 jephbayf1986</Copyright>
+	<PackageProjectUrl></PackageProjectUrl>
+	<RepositoryUrl>https://github.com/jephbayf1986/DrMock.EntityFrameworkCore</RepositoryUrl>
+	<PackageTags>Database;Testing;C#</PackageTags>
+	<PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+	<NeutralLanguage>en</NeutralLanguage>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<Company>jephbayf1986</Company>
+	<Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,6 +62,13 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
 	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<None Include="..\..\README.md">
+	  <Pack>True</Pack>
+	  <PackagePath>\</PackagePath>
+	</None>
   </ItemGroup>
 
 </Project>
