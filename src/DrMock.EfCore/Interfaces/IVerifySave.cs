@@ -2,7 +2,10 @@ using Moq;
 
 namespace DrMock.EfCore.Interfaces
 {
-    internal interface IVerifySave
+    /// <summary>
+    /// Verify Save Interface
+    /// </summary>
+    public interface IVerifySave
     {
         /// <summary>
         /// Verify Changes Saved

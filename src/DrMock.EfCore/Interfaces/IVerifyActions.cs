@@ -5,6 +5,9 @@ using Moq;
 
 namespace DrMock.EfCore.Interfaces
 {
+    /// <summary>
+    /// Verify Actions Interface
+    /// </summary>
     public interface IVerifyActions
     {
         /// <summary>

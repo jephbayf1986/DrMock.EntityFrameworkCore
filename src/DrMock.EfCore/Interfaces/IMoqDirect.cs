@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace DrMock.EfCore.Interfaces
 {
+    /// <summary>
+    /// Moq Direct Methods Interface
+    /// </summary>
+    /// <typeparam name="T">Entity Mocked</typeparam>
     public interface IMoqDirect<T> where T : class
     {
         /// <summary>
