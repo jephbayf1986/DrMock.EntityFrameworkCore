@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DrMock.EfCore.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -63,9 +64,8 @@ namespace DrMock.EfCore.Helpers
                 }
             }
 
-            throw new NotSupportedException("Unsuppported operator");
+            throw DrMockExpressionException.UnsupportedOperation(node);
         }
-
 
         protected override Expression VisitUnary(UnaryExpression node)
         {
@@ -80,7 +80,7 @@ namespace DrMock.EfCore.Helpers
                     if (success) return node;
                 }
 
-                throw new NotSupportedException("Unsuppported unary operator");
+                throw DrMockExpressionException.UnsupportedUnaryOperation(node);
             }
 
             return node;
@@ -317,7 +317,7 @@ namespace DrMock.EfCore.Helpers
             }
 
             return current as ParameterExpression
-                ?? throw new InvalidOperationException("No parameter found");
+                ?? throw DrMockExpressionException.RootParamaterNotFound(member);
         }
     }
 }
