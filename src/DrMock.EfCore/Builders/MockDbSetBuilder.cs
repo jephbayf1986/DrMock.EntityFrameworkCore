@@ -140,7 +140,9 @@ namespace DrMock.EfCore.Builders
 
         public MockDbSetBuilder<T> WithActionOnAddAsync(Action<T> action)
         {
-            _mock.Setup(x => x.AddAsync(It.IsAny<T>(), It.IsAny<CancellationToken>())).Callback(action);
+            _mock
+                .Setup(x => x.AddAsync(It.IsAny<T>(), It.IsAny<CancellationToken>()))
+                .Callback((T newItem, CancellationToken token) => action(newItem));
 
             return this;
         }
