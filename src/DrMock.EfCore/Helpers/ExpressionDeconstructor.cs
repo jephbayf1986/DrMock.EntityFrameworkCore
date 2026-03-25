@@ -266,19 +266,37 @@ namespace DrMock.EfCore.Helpers
                 return true;
             }
 
-            if (expression is MemberExpression memEx && !(memEx is PropertyInfo))
+            if (expression is MemberExpression memEx && !(memEx is PropertyInfo) && (memEx.Expression.NodeType != ExpressionType.Parameter))
             {
                 value = Expression.Lambda(memEx).Compile().DynamicInvoke();
                 return true;
             }
 
-            if (expression is UnaryExpression unaEx && unaEx.NodeType == ExpressionType.Negate)
+            if (expression is UnaryExpression unaEx)
             {
-                if (IsValue(unaEx.Operand, out value))
+                if (unaEx.NodeType == ExpressionType.Negate && IsValue(unaEx.Operand, out value))
                 {
                     value = TryNegateValue(value, unaEx.Type);
                     return true;
                 } 
+
+                if (unaEx.NodeType == ExpressionType.Convert)
+                {
+                    value = Expression.Lambda(unaEx).Compile().DynamicInvoke();
+                    return true;
+                }
+            }
+
+            if (expression is MethodCallExpression methEx && methEx.NodeType == ExpressionType.Call)
+            {
+                value = Expression.Lambda(methEx).Compile().DynamicInvoke();
+                return true;
+            }
+             
+            if (expression is NewExpression || expression is ListInitExpression)
+            {
+                value = Expression.Lambda(expression).Compile().DynamicInvoke();
+                return true;
             }
 
             return false;

@@ -16,6 +16,10 @@
 
         public bool IsManager { get; set; }
 
+        public int? Level { get; set; }
+
+        public Guid? UniqueIdentifier { get; set; }
+
         public Payroll? Payroll { get; set; }
     }
 }

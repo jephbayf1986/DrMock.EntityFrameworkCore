@@ -206,6 +206,99 @@ namespace DrMock.EfCore.Tests.BuilderTets
         }
 
         [Fact]
+        public void GivenInterface_WithExistsWithNull_CreateDbSetWithPassingData()
+        {
+            // Arrange
+            var personId = RandomIntBetween(100, 999);
+            var payrollDepartmentId = RandomIntBetween(1000, 2000);
+
+            var mock = new MockDbContext<ITestDbContext>()
+                .WithRandomDataFor<Person>()
+                .Exists<Person>(x => x.Id == personId && x.Level == null);
+
+            var dbContext = mock.Object;
+
+            // Act
+            var people = dbContext.People.ToList();
+            var personFound = dbContext.People.FirstOrDefault(x => x.Id == personId);
+
+            // Assert
+            people.ShouldContain(x => x.Id == personId);
+            personFound.ShouldNotBeNull();
+            personFound.Level.ShouldBeNull();
+        }
+
+        [Fact]
+        public void GivenInterface_WithExistsWithGuidGenerated_CreateDbSetWithPassingData()
+        {
+            // Arrange
+            var personId = RandomIntBetween(100, 999);
+            var payrollDepartmentId = RandomIntBetween(1000, 2000);
+
+            var mock = new MockDbContext<ITestDbContext>()
+                .WithRandomDataFor<Person>()
+                .Exists<Person>(x => x.Id == personId && x.UniqueIdentifier == Guid.NewGuid() && x.FirstName == Guid.NewGuid().ToString());
+
+            var dbContext = mock.Object;
+
+            // Act
+            var people = dbContext.People.ToList();
+            var personFound = dbContext.People.FirstOrDefault(x => x.Id == personId);
+
+            // Assert
+            people.ShouldContain(x => x.Id == personId);
+            personFound.ShouldNotBeNull();
+            personFound.UniqueIdentifier.ShouldNotBeNull();
+            personFound.FirstName.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public void GivenInterface_WithExistsWithEmptyList_CreateDbSetWithPassingData()
+        {
+            // Arrange
+            var departmentId = RandomIntBetween(100, 999);
+            var payrollDepartmentId = RandomIntBetween(1000, 2000);
+
+            var mock = new MockDbContext<ITestDbContext>()
+                .WithRandomDataFor<Department>()
+                .Exists<Department>(x => x.Id == departmentId && x.Employees == new List<Person>());
+            
+            var dbContext = mock.Object;
+
+            // Act
+            var departments = dbContext.Departments.ToList();
+            var departmentFound = dbContext.Departments.FirstOrDefault(x => x.Id == departmentId);
+
+            // Assert
+            departments.ShouldContain(x => x.Id == departmentId);
+            departmentFound.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void GivenInterface_WithExistsWithPopulatedList_CreateDbSetWithPassingData()
+        {
+            // Arrange
+            var departmentId = RandomIntBetween(100, 999);
+            var payrollDepartmentId = RandomIntBetween(1000, 2000);
+            var person = new Person { Id = RandomIntBetween(10, 99) };
+
+            var mock = new MockDbContext<ITestDbContext>()
+                .WithRandomDataFor<Department>()
+                .Exists<Department>(x => x.Id == departmentId && x.Employees == new List<Person>() { person });
+
+            var dbContext = mock.Object;
+
+            // Act
+            var departments = dbContext.Departments.ToList();
+            var departmentFound = dbContext.Departments.FirstOrDefault(x => x.Id == departmentId);
+
+            // Assert
+            departments.ShouldContain(x => x.Id == departmentId);
+            departmentFound.ShouldNotBeNull();
+            departmentFound.Employees.ShouldNotBeEmpty();
+        }
+
+        [Fact]
         public void GivenClass_WithSimpleExists_CreateDbSetWithPassingData()
         {
             // Arrange

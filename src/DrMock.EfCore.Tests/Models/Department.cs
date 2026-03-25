@@ -9,5 +9,7 @@
         public DateTime DateOpen { get; set; }
 
         public DateTime? DateClosed { get; set; }
+
+        public ICollection<Person>? Employees { get; set; }
     }
 }
