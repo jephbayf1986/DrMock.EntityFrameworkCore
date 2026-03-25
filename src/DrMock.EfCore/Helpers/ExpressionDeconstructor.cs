@@ -293,7 +293,7 @@ namespace DrMock.EfCore.Helpers
                 return true;
             }
              
-            if (expression is NewExpression || expression is ListInitExpression)
+            if (expression is NewExpression || expression is ListInitExpression || expression is BinaryExpression)
             {
                 value = Expression.Lambda(expression).Compile().DynamicInvoke();
                 return true;
